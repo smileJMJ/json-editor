@@ -15,6 +15,8 @@ export class JSONEditor {
   constructor (element, options = {}) {
     if (!(element instanceof Element)) throw new Error('element should be an instance of Element')
 
+    console.log('smileJMJ`s editor!!!')
+
     this.element = element
     this.options = extend({}, JSONEditor.defaults.options, options)
     this.ready = false

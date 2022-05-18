@@ -1,4 +1,5 @@
 import { trigger } from './utilities'
+import { LABEL_POSITION } from './enums'
 
 const matchKey = [
   'matches',
@@ -323,11 +324,21 @@ export class AbstractTheme {
 
   }
 
-  getFormControl (label, input, description, infoText, formName) {
+  getFormControl (label, input, description, infoText, formName, options) {
+    const { labelPosition = LABEL_POSITION.TOP } = options || {}
     const el = document.createElement('div')
+    let labelWrap = null
+    const isLabelPositionLeft = labelPosition === LABEL_POSITION.LEFT
     el.classList.add('form-control')
     if (label) {
-      el.appendChild(label)
+      if (isLabelPositionLeft) {
+        labelWrap = document.createElement('div')
+        labelWrap.classList.add('flex')
+        labelWrap.appendChild(label)
+        el.appendChild(labelWrap)
+      } else {
+        el.appendChild(label)
+      }
       if (formName) label.setAttribute('for', formName)
     }
     if ((input.type === 'checkbox' || input.type === 'radio') && label) {
@@ -335,8 +346,9 @@ export class AbstractTheme {
       label.insertBefore(input, label.firstChild)
       if (infoText) label.appendChild(infoText)
     } else {
+      const wrap = isLabelPositionLeft ? labelWrap : el
       if (infoText && label) label.appendChild(infoText)
-      el.appendChild(input)
+      wrap.appendChild(input)
     }
 
     if (description) el.appendChild(description)

@@ -80,6 +80,7 @@ export class JSONEditor {
       required: true,
       container: this.root_container
     })
+    const isLoadValidate = this.options.loadValidate // 로드 시 밸리데이션 실행할지 여부
 
     this.root.preBuild()
     this.root.build()
@@ -88,8 +89,8 @@ export class JSONEditor {
     /* Starting data */
     if (hasOwnProperty(this.options, 'startval')) this.root.setValue(this.options.startval)
 
-    this.validation_results = this.validator.validate(this.root.getValue())
-    this.root.showValidationErrors(this.validation_results)
+    this.validation_results = this.validator.validate(this.root.getValue()) // 해당 코드는 정상적인 밸리데이션 동작을 위해 초기 실행되어야 함
+    isLoadValidate && this.root.showValidationErrors(this.validation_results)
     this.ready = true
     this.element.classList.remove('je-not-loaded')
     this.element.classList.add('je-ready')
@@ -97,8 +98,8 @@ export class JSONEditor {
     /* Fire ready event asynchronously */
     window.requestAnimationFrame(() => {
       if (!this.ready) return
-      this.validation_results = this.validator.validate(this.root.getValue())
-      this.root.showValidationErrors(this.validation_results)
+      this.validation_results = this.validator.validate(this.root.getValue()) // 해당 코드는 정상적인 밸리데이션 동작을 위해 초기 실행되어야 함
+      isLoadValidate && this.root.showValidationErrors(this.validation_results)
       this.trigger('ready')
       this.trigger('change')
     })
@@ -119,7 +120,6 @@ export class JSONEditor {
 
   validate (value) {
     if (!this.ready) throw new Error('JSON Editor not ready yet. Make sure the load method is complete')
-
     /* Custom value */
     if (arguments.length === 1) {
       return this.validator.validate(value)

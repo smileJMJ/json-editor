@@ -37,9 +37,27 @@ export class CheckboxEditor extends AbstractEditor {
     if (this.options.infoText && !this.options.compact) this.infoButton = this.theme.getInfoButton(this.translateProperty(this.options.infoText))
     if (this.options.compact) this.container.classList.add('compact')
 
+    const isSwitchMode = this.options.switchMode
+    let element = null
     this.input = this.theme.getCheckbox()
     this.input.id = this.formname
-    this.control = this.theme.getFormControl(this.label, this.input, this.description, this.infoButton, null, this.options)
+    if (isSwitchMode) { // switch mode 추가
+      const isShowStatus = this.options.showStatus
+      const wrap = document.createElement('div')
+      const switchEle = this.theme.getCheckboxSwitch()
+      if (isShowStatus) {
+        switchEle.classList.add('show-status')
+      }
+      wrap.classList.add('custom-switch-wrap')
+      wrap.appendChild(this.input)
+      wrap.appendChild(switchEle)
+      switchEle.addEventListener('click', e => {
+        const isChecked = this.input.checked
+        this.input.checked = !isChecked
+      })
+      element = wrap
+    } else { element = this.input }
+    this.control = this.theme.getFormControl(this.label, element, this.description, this.infoButton, null, this.options)
 
     if (this.schema.readOnly || this.schema.readonly) {
       this.disable(true)

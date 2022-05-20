@@ -37,6 +37,7 @@ export class JSONEditor {
     this.element.classList.remove('je-ready')
     // eslint-disable-next-line new-cap
     this.theme = new themeClass(this)
+    this.theme.themeName = themeName
     const rules = extend(styleRules, this.getEditorsRules())
 
     /* Call addNewStyleRulesToShadowRoot if shadowRoot is found, otherwise call addNewStyleRules */

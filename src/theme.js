@@ -178,11 +178,14 @@ export class AbstractTheme {
     return el
   }
 
-  getFormRadioControl (label, input, compact) {
+  getFormRadioControl (label, input, compact, themeName) {
     const el = document.createElement('div')
     el.appendChild(label)
     input.style.width = 'auto'
     label.insertBefore(input, label.firstChild)
+    if (themeName === 'popcorn') {
+      input.insertAdjacentHTML('afterend', '<i></i>')
+    }
     if (compact) {
       el.classList.add('je-radio-control--compact')
     }

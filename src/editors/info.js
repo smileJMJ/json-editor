@@ -6,7 +6,7 @@ export class InfoEditor extends ButtonEditor {
     this.options.compact = false
     this.header = this.label = this.theme.getFormInputLabel(this.getTitle())
     this.description = this.theme.getDescription(this.schema.description || '')
-    this.control = this.theme.getFormControl(this.label, this.description, null)
+    this.control = this.theme.getFormControl(this.label, this.description, null, null, null, this.options)
     this.container.appendChild(this.control)
   }
 

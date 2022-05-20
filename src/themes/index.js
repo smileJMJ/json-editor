@@ -9,6 +9,7 @@ import { barebonesTheme } from './barebones.js'
 // import  { materializeTheme } from  './materialize'
 import { spectreTheme } from './spectre.js'
 import { tailwindTheme } from './tailwind.js'
+import { popcornTheme } from './popcorn.js'
 
 export const themes = {
   html: htmlTheme,
@@ -24,5 +25,6 @@ export const themes = {
   barebones: barebonesTheme,
   // materialize: materializeTheme,
   spectre: spectreTheme,
-  tailwind: tailwindTheme
+  tailwind: tailwindTheme,
+  popcorn: popcornTheme
 }

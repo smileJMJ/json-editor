@@ -93,7 +93,7 @@ export class Base64Editor extends AbstractEditor {
     this.preview = this.theme.getFormInputDescription(this.translateProperty(this.schema.description))
     this.container.appendChild(this.preview)
 
-    this.control = this.theme.getFormControl(this.label, this.uploader || this.input, this.preview, this.infoButton)
+    this.control = this.theme.getFormControl(this.label, this.uploader || this.input, this.preview, this.infoButton, null, this.options)
     this.container.appendChild(this.control)
   }
 

@@ -94,7 +94,7 @@ export class MultiSelectEditor extends AbstractEditor {
         this.select_options[this.option_keys[i]] = this.input.children[i]
       }
 
-      this.control = this.theme.getFormControl(this.label, this.input, this.description, this.infoButton)
+      this.control = this.theme.getFormControl(this.label, this.input, this.description, this.infoButton, null, this.options)
     }
 
     if (this.schema.readOnly || this.schema.readonly) {

@@ -161,7 +161,7 @@ export class UploadEditor extends AbstractEditor {
 
     this.preview = document.createElement('div')
 
-    this.control = this.input.controlgroup = this.theme.getFormControl(this.label, this.uploader || this.input, this.description, this.infoButton)
+    this.control = this.input.controlgroup = this.theme.getFormControl(this.label, this.uploader || this.input, this.description, this.infoButton, null, this.options)
     if (this.uploader) this.uploader.controlgroup = this.control
     const inputNode = this.uploader || this.input
     const elements = document.createElement('div')

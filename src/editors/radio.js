@@ -50,7 +50,7 @@ export class RadioEditor extends SelectEditor {
       const radioLabel = this.theme.getFormRadioLabel(this.enum_display[i])
       radioLabel.htmlFor = this.input.id
 
-      const control = this.theme.getFormRadioControl(radioLabel, this.input, !!(this.options.layout === 'horizontal' || this.options.compact))
+      const control = this.theme.getFormRadioControl(radioLabel, this.input, !!(this.options.layout === 'horizontal' || this.options.compact), this.theme.themeName)
 
       this.radioContainer.appendChild(control)
     }
@@ -69,7 +69,7 @@ export class RadioEditor extends SelectEditor {
 
     this.input = radioContainerWrapper
 
-    this.control = this.theme.getFormControl(this.label, radioContainerWrapper, this.description, this.infoButton)
+    this.control = this.theme.getFormControl(this.label, radioContainerWrapper, this.description, this.infoButton, null, this.options)
     this.container.appendChild(this.control)
 
     /* Any special formatting that needs to happen after the input is added to the dom */

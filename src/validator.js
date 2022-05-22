@@ -10,6 +10,27 @@ export class Validator {
     this.translateProperty = this.jsoneditor.translateProperty || defaults.translateProperty
     this.defaults = defaults
 
+    // 필수값 체크
+    this._requiredSchema = (schema, value, path) => {
+      const errors = []
+      if (Array.isArray(schema.required)) {
+        schema.required.forEach(e => {
+          if (typeof value[e] !== 'boolean' && !value[e]) {
+            const editor = this.jsoneditor.getEditor(`${path}.${e}`)
+            if (editor && editor.dependenciesFulfilled === false) return
+            /* Ignore required error if editor is of type "button" or "info" */
+            if (editor && ['button', 'info'].includes(editor.schema.format || editor.schema.type)) return
+            errors.push({
+              path: editor.path,
+              property: 'required',
+              message: this.translate('error_required', [schema && schema.properties && schema.properties[e] && schema.properties[e].title ? schema.properties[e].title : e], schema)
+            })
+          }
+        })
+      }
+      return errors
+    }
+
     this._validateSubSchema = {
       const (schema, value, path) {
         const valid = JSON.stringify(schema.const) === JSON.stringify(value) && !(Array.isArray(value) || typeof value === 'object')
@@ -579,11 +600,18 @@ export class Validator {
 
     /* Work on a copy of the schema */
     schema = extend({}, this.jsoneditor.expandRefs(schema))
-
     /*
      * Type Agnostic Validation
      */
+
+    // required 지정한 데이터 확인
+    if (Array.isArray(schema.required) && schema.required.length > 0) {
+      const requiredErrors = this._requiredSchema(schema, value, path)
+      errors.push(...requiredErrors)
+    }
+
     /* Version 3 `required` and `required_by_default` */
+    // value값이 없을 때 - required로 설정하고 값이 없을 때
     if (typeof value === 'undefined') {
       return this._validateV3Required(schema, value, path)
     }

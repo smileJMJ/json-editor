@@ -18,8 +18,11 @@ export class popcornTheme extends AbstractTheme {
     }
 
     group.classList.add('error')
-    input.errmsg.innerHTML = ''
-    input.errmsg.appendChild(document.createTextNode(text))
+    if (Array.isArray(text) && text.length > 0) {
+      input.errmsg.innerHTML = `<p>${text[0]}</p>`
+    } else {
+      input.errmsg.innerHTML = `<p>${text}</p>`
+    }
   }
 
   removeInputError (input) {

@@ -362,7 +362,7 @@ export class SelectEditor extends AbstractEditor {
     const messages = errors.reduce(addMessage, [])
 
     if (messages.length) {
-      this.theme.addInputError(this.input, `${messages.join('. ')}.`)
+      this.theme.addInputError(this.input, this.theme.themeName === 'popcorn' ? messages : `${messages.join('. ')}.`)
     } else {
       this.theme.removeInputError(this.input)
     }

@@ -129,6 +129,14 @@ export class JSONEditor {
     }
   }
 
+  // submit 진행 시 유효성검사 진행 후 에러메시지 노출
+  validateSubmit () {
+    const results = this.validator.validate(this.root.getValue())
+    this.root.showValidationErrors(results)
+
+    return results
+  }
+
   destroy () {
     if (this.destroyed) return
     if (!this.ready) return

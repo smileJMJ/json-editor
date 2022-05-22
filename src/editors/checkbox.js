@@ -107,7 +107,7 @@ export class CheckboxEditor extends AbstractEditor {
     this.input.controlgroup = this.control
 
     if (messages.length) {
-      this.theme.addInputError(this.input, `${messages.join('. ')}.`)
+      this.theme.addInputError(this.input, this.theme.themeName === 'popcorn' ? messages : `${messages.join('. ')}.`)
     } else {
       this.theme.removeInputError(this.input)
     }

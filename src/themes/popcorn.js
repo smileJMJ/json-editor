@@ -1,5 +1,4 @@
 import { AbstractTheme } from '../theme.js'
-import rules from './popcorn.css.js'
 
 export class popcornTheme extends AbstractTheme {
   addInputError (input, text) {
@@ -34,6 +33,3 @@ export class popcornTheme extends AbstractTheme {
     group.classList.remove('error')
   }
 }
-
-/* Custom stylesheet rules. format: "selector" : "CSS rules" */
-popcornTheme.rules = rules

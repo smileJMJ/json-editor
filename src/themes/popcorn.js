@@ -32,4 +32,8 @@ export class popcornTheme extends AbstractTheme {
     if (input.errmsg) input.errmsg.style.display = 'none'
     group.classList.remove('error')
   }
+
+  setGridColumnSize (el, size) {
+    el.classList.add(`col-span-${size}`)
+  }
 }

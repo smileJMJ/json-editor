@@ -92,6 +92,7 @@ export class ObjectEditor extends AbstractEditor {
     let row
 
     if (this.format === 'grid-strict') {
+      const isPopcornTheme = this.theme.themeName === 'popcorn'
       let rowIndex = 0
       row = []
 
@@ -104,12 +105,16 @@ export class ObjectEditor extends AbstractEditor {
         const offset = editor.options.hidden ? 0 : (editor.options.grid_offset || 0)
         const gridBreak = editor.options.hidden ? false : (editor.options.grid_break || false)
         const height = editor.options.hidden ? 0 : editor.container.offsetHeight
+        const isGridRow = !!editor.options.grid_columns // grid_columns 지정해주었을 때 상위 row에만 grid 설정하도록
+        const gap = editor.options.grid_gap || 0 // grid_columns 사이의 gap 추가
 
         const column = {
           key,
           width,
           offset,
-          height
+          height,
+          gap,
+          isGridRow
         }
 
         row.push(column)
@@ -138,6 +143,13 @@ export class ObjectEditor extends AbstractEditor {
             editor.container.style.display = 'none'
           } else {
             this.theme.setGridColumnSize(editor.container, rows[i][j].width, rows[i][j].offset)
+          }
+          if (isPopcornTheme && rows[i][j].isGridRow) {
+            let classArray = ['grid', 'grid-cols-12']
+            if (rows[i][j].gap) {
+              classArray = [...classArray, `gap-${rows[i][j].gap}`]
+            }
+            row.classList.add(...classArray)
           }
           row.appendChild(editor.container)
         }

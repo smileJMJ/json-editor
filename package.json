@@ -23,7 +23,6 @@
     "editor"
   ],
   "scripts": {
-    "prepare": "npm run build",
     "clean": "npm run clean.css.js",
     "clean.css.js": "find ./src -name *.css.js -type f -delete",
     "build": "npm run build.prod && npm run build.nonmin",

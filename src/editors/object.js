@@ -101,7 +101,7 @@ export class ObjectEditor extends AbstractEditor {
         if (editor.property_removed) {
           return
         }
-        const width = editor.options.hidden ? 0 : (editor.options.grid_columns || editor.getNumColumns())
+        const width = editor.options.hidden ? 0 : (isPopcornTheme ? (editor.options.grid_columns || 0) : editor.getNumColumns())
         const offset = editor.options.hidden ? 0 : (editor.options.grid_offset || 0)
         const gridBreak = editor.options.hidden ? false : (editor.options.grid_break || false)
         const height = editor.options.hidden ? 0 : editor.container.offsetHeight
@@ -116,6 +116,7 @@ export class ObjectEditor extends AbstractEditor {
           gap,
           isGridRow
         }
+        console.log('column', column, editor.options.grid_columns)
 
         row.push(column)
 
@@ -130,10 +131,13 @@ export class ObjectEditor extends AbstractEditor {
       /* layout hasn't changed */
       if (this.layout === JSON.stringify(rows)) return false
       this.layout = JSON.stringify(rows)
+      console.log('rows', rows)
 
       /* Layout the form */
+      let gap = 0
       container = document.createElement('div')
       for (i = 0; i < rows.length; i++) {
+        gap = 0
         row = this.theme.getGridRow()
         container.appendChild(row)
         for (j = 0; j < rows[i].length; j++) {
@@ -146,8 +150,9 @@ export class ObjectEditor extends AbstractEditor {
           }
           if (isPopcornTheme && rows[i][j].isGridRow) {
             let classArray = ['grid', 'grid-cols-12']
-            if (rows[i][j].gap) {
-              classArray = [...classArray, `gap-${rows[i][j].gap}`]
+            if (!gap && rows[i][j].gap) {
+              gap = rows[i][j].gap
+              classArray = [...classArray, `gap-${gap}`]
             }
             row.classList.add(...classArray)
           }

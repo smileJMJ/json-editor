@@ -34,6 +34,6 @@ export class popcornTheme extends AbstractTheme {
   }
 
   setGridColumnSize (el, size) {
-    el.classList.add(`col-span-${size}`)
+    !!size && el.classList.add(`col-span-${size}`)
   }
 }

@@ -116,7 +116,6 @@ export class ObjectEditor extends AbstractEditor {
           gap,
           isGridRow
         }
-        console.log('column', column, editor.options.grid_columns)
 
         row.push(column)
 
@@ -131,7 +130,6 @@ export class ObjectEditor extends AbstractEditor {
       /* layout hasn't changed */
       if (this.layout === JSON.stringify(rows)) return false
       this.layout = JSON.stringify(rows)
-      console.log('rows', rows)
 
       /* Layout the form */
       let gap = 0

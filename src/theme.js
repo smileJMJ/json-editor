@@ -1,5 +1,4 @@
 import { trigger } from './utilities'
-import { LABEL_POSITION } from './enums'
 
 const matchKey = [
   'matches',
@@ -131,12 +130,6 @@ export class AbstractTheme {
     return el
   }
 
-  getCheckboxSwitch () {
-    const el = document.createElement('span')
-    el.classList.add('custom-switch')
-    return el
-  }
-
   getMultiCheckboxHolder (controls, label, description, infoText) {
     const el = document.createElement('div')
     el.classList.add('control-group')
@@ -184,14 +177,11 @@ export class AbstractTheme {
     return el
   }
 
-  getFormRadioControl (label, input, compact, themeName) {
+  getFormRadioControl (label, input, compact) {
     const el = document.createElement('div')
     el.appendChild(label)
     input.style.width = 'auto'
     label.insertBefore(input, label.firstChild)
-    if (themeName === 'popcorn') {
-      input.insertAdjacentHTML('afterend', '<span class="custom-radio"></span>')
-    }
     if (compact) {
       el.classList.add('je-radio-control--compact')
     }
@@ -333,42 +323,20 @@ export class AbstractTheme {
 
   }
 
-  getFormControl (label, input, description, infoText, formName, options) {
-    const { labelPosition = LABEL_POSITION.TOP, inputSiblingLabel = false } = options || {}
+  getFormControl (label, input, description, infoText, formName) {
     const el = document.createElement('div')
-    let labelWrap = null
-    const isLabelPositionLeft = labelPosition === LABEL_POSITION.LEFT
     el.classList.add('form-control')
     if (label) {
-      if (isLabelPositionLeft) {
-        labelWrap = document.createElement('div')
-        labelWrap.classList.add('flex')
-        labelWrap.appendChild(label)
-        el.appendChild(labelWrap)
-      } else {
-        el.appendChild(label)
-      }
+      el.appendChild(label)
       if (formName) label.setAttribute('for', formName)
     }
-    /*
     if ((input.type === 'checkbox' || input.type === 'radio') && label) {
       input.style.width = 'auto'
       label.insertBefore(input, label.firstChild)
       if (infoText) label.appendChild(infoText)
     } else {
-      const wrap = isLabelPositionLeft ? labelWrap : el
       if (infoText && label) label.appendChild(infoText)
-      wrap.appendChild(input)
-    }
-    */
-    if ((input.type === 'checkbox' || input.type === 'radio') && label && !inputSiblingLabel) {
-      input.style.width = 'auto'
-      label.insertBefore(input, label.firstChild)
-      if (infoText) label.appendChild(infoText)
-    } else {
-      const wrap = isLabelPositionLeft ? labelWrap : el
-      if (infoText && label) label.appendChild(infoText)
-      wrap.appendChild(input)
+      el.appendChild(input)
     }
 
     if (description) el.appendChild(description)

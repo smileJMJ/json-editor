@@ -11,6 +11,7 @@ export class popcornTheme extends AbstractTheme {
     let labelWrap = null
     const isLabelPositionLeft = labelPosition === LABEL_POSITION.LEFT
     el.classList.add('form-control')
+
     if (label) {
       if (isLabelPositionLeft) {
         labelWrap = document.createElement('div')
@@ -23,14 +24,14 @@ export class popcornTheme extends AbstractTheme {
       if (formName) label.setAttribute('for', formName)
     }
 
-    if ((input.type === 'checkbox' || input.type === 'radio') && label && !inputSiblingLabel) {
+    if (!!input && (input.type === 'checkbox' || input.type === 'radio') && label && !inputSiblingLabel) {
       input.style.width = 'auto'
       label.insertBefore(input, label.firstChild)
       if (infoText) label.appendChild(infoText)
     } else {
       const wrap = isLabelPositionLeft ? labelWrap : el
       if (infoText && label) label.appendChild(infoText)
-      wrap.appendChild(input)
+      !!input && wrap.appendChild(input)
     }
 
     if (description) el.appendChild(description)
@@ -107,10 +108,57 @@ export class popcornTheme extends AbstractTheme {
   /*
     Upload
   */
-  getDropZone (text) {
-    const el = document.createElement('div')
-    el.setAttribute('data-text', text)
-    el.classList.add('je-dropzone')
-    return el
+  setPreviewWrap (target) {
+    const preview = document.createElement('div')
+    const previewList = document.createElement('ul')
+    preview.classList.add('je-upload-preview')
+    previewList.classList.add('preview-list')
+    preview.appendChild(previewList)
+
+    target.appendChild(preview)
+  }
+
+  addPreviewListItem (target, file, data, isDropMode) {
+    if (!target) return
+    const item = document.createElement('li')
+    item.classList.add('flex')
+
+    if (isDropMode && file.mimeType.substr(0, 5) === 'image') {
+      const img = document.createElement('img')
+      img.src = data
+      item.appendChild(img)
+    }
+    const info = document.createElement('div')
+    info.innerHTML += `<strong>${file.name}</strong><span>${file.formattedSize}</span>`
+    item.appendChild(info)
+
+    target.appendChild(item)
+    // preview.appendChild(uploadButton)
+  }
+
+  /* file is an object with properties: name, type, mimeType, size amd formattedSize */
+  getUploadPreview (file, uploadButton, data, isDropMode) {
+    const preview = document.createElement('div')
+    const previewList = document.createElement('ul')
+    preview.classList.add('je-upload-preview')
+    preview.appendChild(previewList)
+
+    if (isDropMode && file.mimeType.substr(0, 5) === 'image') {
+      const img = document.createElement('img')
+      img.src = data
+      preview.appendChild(img)
+    }
+    const info = document.createElement('div')
+
+    info.innerHTML += `<strong>Name:</strong> ${file.name}<br><strong>Type:</strong> ${file.type}<br><strong>Size:</strong> ${file.formattedSize}`
+    preview.appendChild(info)
+
+    preview.appendChild(uploadButton)
+
+    const clear = document.createElement('div')
+    clear.style.clear = 'left'
+    preview.appendChild(clear)
+
+    return preview
   }
 }

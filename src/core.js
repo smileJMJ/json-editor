@@ -217,12 +217,13 @@ export class JSONEditor {
   }
 
   getEditorClass (schema) {
+    const themeName = this.theme.themeName
     let classname
 
     schema = this.expandSchema(schema)
 
     JSONEditor.defaults.resolvers.find(resolver => {
-      classname = resolver(schema)
+      classname = resolver(schema, themeName)
       return classname && JSONEditor.defaults.editors[classname]
     })
     if (!classname) throw new Error(`Unknown editor for schema ${JSON.stringify(schema)}`)

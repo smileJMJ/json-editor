@@ -9733,10 +9733,11 @@ var JSONEditor = /*#__PURE__*/function () {
   }, {
     key: "getEditorClass",
     value: function getEditorClass(schema) {
+      var themeName = this.theme.themeName;
       var classname;
       schema = this.expandSchema(schema);
       JSONEditor.defaults.resolvers.find(function (resolver) {
-        classname = resolver(schema);
+        classname = resolver(schema, themeName);
         return classname && JSONEditor.defaults.editors[classname];
       });
       if (!classname) throw new Error("Unknown editor for schema ".concat(JSON.stringify(schema)));
@@ -15944,13 +15945,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _string_js__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./string.js */ "./src/editors/string.js");
 /* harmony import */ var _table_js__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./table.js */ "./src/editors/table.js");
 /* harmony import */ var _upload_js__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./upload.js */ "./src/editors/upload.js");
-/* harmony import */ var _uuid_js__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./uuid.js */ "./src/editors/uuid.js");
-/* harmony import */ var _colorpicker_js__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./colorpicker.js */ "./src/editors/colorpicker.js");
+/* harmony import */ var _upload_popcorn_js__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./upload-popcorn.js */ "./src/editors/upload-popcorn.js");
+/* harmony import */ var _uuid_js__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./uuid.js */ "./src/editors/uuid.js");
+/* harmony import */ var _colorpicker_js__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./colorpicker.js */ "./src/editors/colorpicker.js");
 /* Internal helper function called only here so we won't export as part of class */
 
 /* Previously the assignment to the JSONEditor.defaults.editors was done in each of the editor */
 
 /* files but doing it this way removes each of the editors' dependency on JSONEditor */
+
 
 
 
@@ -16024,8 +16027,10 @@ var editors = {
   string: _string_js__WEBPACK_IMPORTED_MODULE_32__["StringEditor"],
   table: _table_js__WEBPACK_IMPORTED_MODULE_33__["TableEditor"],
   upload: _upload_js__WEBPACK_IMPORTED_MODULE_34__["UploadEditor"],
-  uuid: _uuid_js__WEBPACK_IMPORTED_MODULE_35__["UuidEditor"],
-  colorpicker: _colorpicker_js__WEBPACK_IMPORTED_MODULE_36__["ColorEditor"]
+  uploadPopcorn: _upload_popcorn_js__WEBPACK_IMPORTED_MODULE_35__["UploadEditor"],
+  // 팝콘 전용 업로드
+  uuid: _uuid_js__WEBPACK_IMPORTED_MODULE_36__["UuidEditor"],
+  colorpicker: _colorpicker_js__WEBPACK_IMPORTED_MODULE_37__["ColorEditor"]
 };
 
 /***/ }),
@@ -23104,6 +23109,580 @@ var TableEditor = /*#__PURE__*/function (_ArrayEditor) {
 
 /***/ }),
 
+/***/ "./src/editors/upload-popcorn.js":
+/*!***************************************!*\
+  !*** ./src/editors/upload-popcorn.js ***!
+  \***************************************/
+/*! exports provided: UploadEditor */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UploadEditor", function() { return UploadEditor; });
+/* harmony import */ var core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.symbol.js */ "./node_modules/core-js/modules/es.symbol.js");
+/* harmony import */ var core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.symbol.description.js */ "./node_modules/core-js/modules/es.symbol.description.js");
+/* harmony import */ var core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ "./node_modules/core-js/modules/es.array.concat.js");
+/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var core_js_modules_es_date_to_string_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.date.to-string.js */ "./node_modules/core-js/modules/es.date.to-string.js");
+/* harmony import */ var core_js_modules_es_date_to_string_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_date_to_string_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/es.object.to-string.js */ "./node_modules/core-js/modules/es.object.to-string.js");
+/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var core_js_modules_es_regexp_to_string_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! core-js/modules/es.regexp.to-string.js */ "./node_modules/core-js/modules/es.regexp.to-string.js");
+/* harmony import */ var core_js_modules_es_regexp_to_string_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_regexp_to_string_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! core-js/modules/es.function.name.js */ "./node_modules/core-js/modules/es.function.name.js");
+/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! core-js/modules/es.array.for-each.js */ "./node_modules/core-js/modules/es.array.for-each.js");
+/* harmony import */ var core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! core-js/modules/es.regexp.exec.js */ "./node_modules/core-js/modules/es.regexp.exec.js");
+/* harmony import */ var core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var core_js_modules_es_string_match_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! core-js/modules/es.string.match.js */ "./node_modules/core-js/modules/es.string.match.js");
+/* harmony import */ var core_js_modules_es_string_match_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_match_js__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var core_js_modules_es_parse_float_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! core-js/modules/es.parse-float.js */ "./node_modules/core-js/modules/es.parse-float.js");
+/* harmony import */ var core_js_modules_es_parse_float_js__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_parse_float_js__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var core_js_modules_es_number_to_fixed_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! core-js/modules/es.number.to-fixed.js */ "./node_modules/core-js/modules/es.number.to-fixed.js");
+/* harmony import */ var core_js_modules_es_number_to_fixed_js__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_number_to_fixed_js__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! core-js/modules/es.array.reduce.js */ "./node_modules/core-js/modules/es.array.reduce.js");
+/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var core_js_modules_es_regexp_constructor_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! core-js/modules/es.regexp.constructor.js */ "./node_modules/core-js/modules/es.regexp.constructor.js");
+/* harmony import */ var core_js_modules_es_regexp_constructor_js__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_regexp_constructor_js__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! core-js/modules/es.string.replace.js */ "./node_modules/core-js/modules/es.string.replace.js");
+/* harmony import */ var core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var core_js_modules_es_object_set_prototype_of_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! core-js/modules/es.object.set-prototype-of.js */ "./node_modules/core-js/modules/es.object.set-prototype-of.js");
+/* harmony import */ var core_js_modules_es_object_set_prototype_of_js__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_set_prototype_of_js__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var core_js_modules_es_object_get_prototype_of_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! core-js/modules/es.object.get-prototype-of.js */ "./node_modules/core-js/modules/es.object.get-prototype-of.js");
+/* harmony import */ var core_js_modules_es_object_get_prototype_of_js__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_get_prototype_of_js__WEBPACK_IMPORTED_MODULE_16__);
+/* harmony import */ var core_js_modules_es_reflect_construct_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! core-js/modules/es.reflect.construct.js */ "./node_modules/core-js/modules/es.reflect.construct.js");
+/* harmony import */ var core_js_modules_es_reflect_construct_js__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_reflect_construct_js__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var core_js_modules_es_object_create_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! core-js/modules/es.object.create.js */ "./node_modules/core-js/modules/es.object.create.js");
+/* harmony import */ var core_js_modules_es_object_create_js__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_create_js__WEBPACK_IMPORTED_MODULE_18__);
+/* harmony import */ var core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! core-js/modules/es.object.define-property.js */ "./node_modules/core-js/modules/es.object.define-property.js");
+/* harmony import */ var core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_19___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_19__);
+/* harmony import */ var core_js_modules_es_reflect_get_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! core-js/modules/es.reflect.get.js */ "./node_modules/core-js/modules/es.reflect.get.js");
+/* harmony import */ var core_js_modules_es_reflect_get_js__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_reflect_get_js__WEBPACK_IMPORTED_MODULE_20__);
+/* harmony import */ var core_js_modules_es_object_get_own_property_descriptor_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! core-js/modules/es.object.get-own-property-descriptor.js */ "./node_modules/core-js/modules/es.object.get-own-property-descriptor.js");
+/* harmony import */ var core_js_modules_es_object_get_own_property_descriptor_js__WEBPACK_IMPORTED_MODULE_21___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_get_own_property_descriptor_js__WEBPACK_IMPORTED_MODULE_21__);
+/* harmony import */ var core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! core-js/modules/es.symbol.iterator.js */ "./node_modules/core-js/modules/es.symbol.iterator.js");
+/* harmony import */ var core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_22___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_22__);
+/* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! core-js/modules/es.array.iterator.js */ "./node_modules/core-js/modules/es.array.iterator.js");
+/* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_23___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_23__);
+/* harmony import */ var core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! core-js/modules/es.string.iterator.js */ "./node_modules/core-js/modules/es.string.iterator.js");
+/* harmony import */ var core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_24___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_24__);
+/* harmony import */ var core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! core-js/modules/web.dom-collections.iterator.js */ "./node_modules/core-js/modules/web.dom-collections.iterator.js");
+/* harmony import */ var core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_25___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_25__);
+/* harmony import */ var _editor_js__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ../editor.js */ "./src/editor.js");
+/* harmony import */ var _utilities_js__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ../utilities.js */ "./src/utilities.js");
+/* harmony import */ var _popcorn_msg_upload__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ../popcorn/msg/upload */ "./src/popcorn/msg/upload.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _get() { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(arguments.length < 3 ? target : receiver); } return desc.value; }; } return _get.apply(this, arguments); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+/* eslint-disable */
+
+
+
+var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
+  _inherits(UploadEditor, _AbstractEditor);
+
+  var _super = _createSuper(UploadEditor);
+
+  function UploadEditor() {
+    _classCallCheck(this, UploadEditor);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(UploadEditor, [{
+    key: "getNumColumns",
+    value: function getNumColumns() {
+      return 4;
+    }
+  }, {
+    key: "build",
+    value: function build() {
+      var _this = this;
+
+      if (!this.options.compact) this.header = this.label = this.theme.getFormInputLabel(this.getTitle(), this.isRequired());
+      if (this.schema.description) this.description = this.theme.getFormInputDescription(this.translateProperty(this.schema.description));
+      if (this.options.infoText) this.infoButton = this.theme.getInfoButton(this.translateProperty(this.options.infoText));
+      if (this.options.innerContents) this.innerContents = this.options.innerContents; // 내부 설명 콘텐츠
+
+      this.country = this.options.country || 'ko';
+      this.msg = _popcorn_msg_upload__WEBPACK_IMPORTED_MODULE_28__["default"][this.country];
+      /* Editor options */
+
+      this.options = this.expandCallbacks('upload', Object(_utilities_js__WEBPACK_IMPORTED_MODULE_27__["extend"])({}, {
+        title: 'Browse',
+        icon: '',
+        //auto_upload: true, /* Trigger file upload button automatically */
+        auto_upload: false,
+        hide_input: false,
+
+        /* Hide the Browse button and name display (Only works if 'enable_drag_drop' is true) */
+        enable_drag_drop: false,
+
+        /* Enable Drag&Drop uploading */
+        drop_zone_text: 'Drag & Drop file here',
+
+        /* Text displayed in dropzone box */
+        drop_zone_top: false,
+
+        /* Position of dropzone. true=before button input, false=after button input */
+        alt_drop_zone: '',
+
+        /* Alternate DropZone DOM selector (Can be created inside another property) */
+        mime_type: '',
+
+        /* If set, restricts to mime type(s). Can be either a string or an array */
+        max_upload_size: 0,
+
+        /* Maximum file size allowed. 0 = no limit */
+        upload_handler: function upload_handler(jseditor, type, file, cbs) {
+          /* Default dummy test upload handler */
+          window.alert("No upload_handler defined for \"".concat(jseditor.path, "\". You must create your own handler to enable upload to server"));
+        }
+      }, this.defaults.options.upload || {}, this.options.upload || {}));
+      this.options.mime_type = this.options.mime_type ? [].concat(this.options.mime_type) : []; // drop mode 여부 - enable_drag_drop: true인지 여부
+
+      this.isDropMode = this.options.enable_drag_drop || false;
+      /* Input that holds the base64 string */
+
+      this.input = this.theme.getFormInputField('hidden');
+      this.container.appendChild(this.input);
+      /* Don't show uploader if this is readonly */
+
+      if (!this.schema.readOnly && !this.schema.readonly) {
+        if (typeof this.options.upload_handler !== 'function') throw new Error('Upload handler required for upload editor');
+        /* File uploader */
+
+        this.uploader = this.theme.getFormInputField('file');
+        this.uploader.style.display = 'none';
+        if (this.options.mime_type.length) this.uploader.setAttribute('accept', this.options.mime_type);
+
+        if (!(this.options.enable_drag_drop === true && this.options.hide_input === true)) {
+          /* Pass click to this.uploader element */
+          this.clickHandler = function (e) {
+            _this.uploader.dispatchEvent(new window.MouseEvent('click', {
+              view: window,
+              bubbles: true,
+              cancelable: false
+            }));
+          };
+          /* Browse button */
+
+
+          this.browseButton = this.getButton(this.msg.upload_btn_browse, this.options.icon, this.msg.upload_btn_browse);
+          this.browseButton.addEventListener('click', this.clickHandler);
+          /* Display field */
+
+          this.fileDisplay = this.theme.getFormInputField('input');
+          this.fileDisplay.setAttribute('readonly', true);
+          this.fileDisplay.value = 'No file selected.';
+          this.fileDisplay.addEventListener('dblclick', this.clickHandler);
+          this.fileUploadGroup = this.theme.getInputGroup(this.fileDisplay, [this.browseButton]);
+
+          if (!this.fileUploadGroup) {
+            /* Themes that doesn't support input grouping */
+            this.fileUploadGroup = document.createElement('div');
+            this.fileUploadGroup.appendChild(this.fileDisplay);
+            this.fileUploadGroup.appendChild(this.browseButton);
+          }
+        }
+        /* Drag&Drop upload enabled */
+
+
+        if (this.options.enable_drag_drop === true) {
+          /* Alternate DropZone defined */
+          if (this.options.alt_drop_zone !== '') {
+            this.altDropZone = document.querySelector(this.options.alt_drop_zone);
+            if (this.altDropZone) this.dropZone = this.altDropZone;else throw new Error("Error: alt_drop_zone selector \"".concat(this.options.alt_drop_zone, "\" not found!"));
+          } else this.dropZone = this.theme.getDropZone(this.options.drop_zone_text);
+
+          if (this.dropZone) {
+            this.dropZone.classList.add('upload-dropzone');
+            this.dropZone.addEventListener('dblclick', this.clickHandler);
+          }
+        }
+        /* Triggered after file have been selected */
+
+
+        this.uploadHandler = function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var files = e.target.files || e.dataTransfer.files;
+
+          if (files && files.length) {
+            if (_this.options.max_upload_size !== 0 && files[0].size > _this.options.max_upload_size) {
+              _this.theme.addInputError(_this.uploader, "Filesize too large. Max size is ".concat(_this.options.max_upload_size));
+            } else if (_this.options.mime_type.length !== 0 && !_this.isValidMimeType(files[0].type, _this.options.mime_type)) {
+              _this.theme.addInputError(_this.uploader, "Wrong file format. Allowed format(s): ".concat(_this.options.mime_type.toString()));
+            } else {
+              if (_this.fileDisplay) _this.fileDisplay.value = files[0].name;
+              var fr = new window.FileReader();
+
+              fr.onload = function (evt) {
+                _this.preview_value = evt.target.result;
+
+                _this.refreshPreview(files);
+
+                _this.onChange(true);
+
+                fr = null;
+              };
+
+              fr.readAsDataURL(files[0]);
+            }
+          }
+        };
+
+        this.uploader.addEventListener('change', this.uploadHandler);
+        /* Drag&Drop Event Handler */
+
+        this.dragHandler = function (e) {
+          var files = e.dataTransfer.items || e.dataTransfer.files;
+
+          var validType = files && files.length && (_this.options.mime_type.length === 0 || _this.isValidMimeType(files[0].type, _this.options.mime_type));
+
+          var validZone = e.currentTarget.classList && e.currentTarget.classList.contains('upload-dropzone') && validType;
+
+          switch ((e.currentTarget === window ? 'w_' : 'e_') + e.type) {
+            case 'w_drop':
+            case 'w_dragover':
+              /* prevent default browser action if dropped outside dropzone */
+              if (!validZone) e.dataTransfer.dropEffect = 'none';
+              break;
+
+            case 'e_dragenter':
+              {
+                if (validZone) {
+                  _this.dropZone.classList.add('valid-dropzone');
+
+                  e.dataTransfer.dropEffect = 'copy';
+                } else _this.dropZone.classList.add('invalid-dropzone');
+
+                break;
+              }
+
+            case 'e_dragover':
+              {
+                if (validZone) e.dataTransfer.dropEffect = 'copy';
+                break;
+              }
+
+            case 'e_dragleave':
+              _this.dropZone.classList.remove('valid-dropzone', 'invalid-dropzone');
+
+              break;
+
+            case 'e_drop':
+              {
+                _this.dropZone.classList.remove('valid-dropzone', 'invalid-dropzone');
+
+                if (validZone) _this.uploadHandler(e);
+                break;
+              }
+          }
+
+          if (!validZone) e.preventDefault();
+        };
+        /* Set Drag'n'Drop handlers */
+
+
+        if (this.options.enable_drag_drop === true) {
+          ['dragover', 'drop'].forEach(function (ev) {
+            window.addEventListener(ev, _this.dragHandler, true);
+          });
+          ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (ev) {
+            _this.dropZone.addEventListener(ev, _this.dragHandler, true);
+          });
+        }
+      } // 기존 업로드 영역 생성
+      // this.preview = document.createElement('div')
+      // this.control = this.input.controlgroup = this.theme.getFormControl(this.label, this.uploader || this.input, this.description, this.infoButton, null, this.options)
+      // if (this.uploader) this.uploader.controlgroup = this.control
+      // const inputNode = this.uploader || this.input
+      // const elements = document.createElement('div')
+      // if (this.dropZone && !this.altDropZone && this.options.drop_zone_top === true) elements.appendChild(this.dropZone)
+      // if (this.fileUploadGroup) elements.appendChild(this.fileUploadGroup)
+      // if (this.dropZone && !this.altDropZone && this.options.drop_zone_top !== true) elements.appendChild(this.dropZone)
+      // elements.appendChild(this.preview)
+      // inputNode.parentNode.insertBefore(elements, inputNode.nextSibling)
+      // this.container.appendChild(this.control)
+      /////////
+
+
+      if (this.isDropMode) {
+        this.makeDropMode();
+      } else {
+        this.makeBasicMode();
+      }
+      /* Any special formatting that needs to happen after the input is added to the dom */
+
+
+      window.requestAnimationFrame(function () {
+        _this.afterInputReady();
+      });
+    } // 기본 모드 생성
+
+  }, {
+    key: "makeBasicMode",
+    value: function makeBasicMode() {
+      var flexWrap = document.createElement('div');
+      var inputWrap = document.createElement('div');
+      var inputNode = this.uploader || this.input;
+      flexWrap.classList.add('flex');
+      this.makeInnerContents(flexWrap); // innserContents 생성
+
+      inputWrap.classList.add('input-wrap'); // inputWrap.appendChild(inputNode)
+      // inputWrap.appendChild(this.browseButton)
+
+      inputWrap.append(inputNode, this.browseButton);
+      this.makePreview(inputWrap);
+      flexWrap.appendChild(inputWrap);
+      this.control = this.input.controlgroup = this.theme.getFormControl(this.label, null, null, null, null, this.options);
+      this.control.appendChild(flexWrap);
+      this.container.appendChild(this.control);
+    } // drop mode 생성
+
+  }, {
+    key: "makeDropMode",
+    value: function makeDropMode() {} // innerContents 생성
+
+  }, {
+    key: "makeInnerContents",
+    value: function makeInnerContents(target) {
+      if (!target || !this.innerContents) return;
+      var innerContents = document.createElement('div');
+      innerContents.classList.add('inner-contents');
+      innerContents.innerHTML = this.innerContents;
+      target.appendChild(innerContents);
+    } // preview 영역 생성
+
+  }, {
+    key: "makePreview",
+    value: function makePreview(target) {
+      if (!target) return;
+      this.preview = document.createElement('div');
+      this.preview.classList.add('preview-wrap');
+      target.appendChild(this.preview);
+    }
+  }, {
+    key: "afterInputReady",
+    value: function afterInputReady() {
+      var _this2 = this;
+
+      if (this.value && this.isDropMode) {
+        var img = document.createElement('img');
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '100px';
+
+        img.onload = function (event) {
+          _this2.preview.appendChild(img);
+        };
+
+        img.onerror = function (error) {
+          // eslint-disable-next-line no-console
+          console.error('upload error', error, error.currentTarget);
+        };
+
+        img.src = this.container.querySelector('a').href;
+      }
+
+      this.theme.afterInputReady(this.input);
+    }
+  }, {
+    key: "refreshPreview",
+    value: function refreshPreview(files) {
+      var _this3 = this;
+
+      if (this.last_preview === this.preview_value) return;
+      this.last_preview = this.preview_value;
+      this.preview.innerHTML = '';
+      if (!this.preview_value) return;
+      var file = files[0];
+      /* mime type extracted from file data. More exact than the one in the file object */
+
+      var mime = this.preview_value.match(/^data:([^;,]+)[;,]/);
+      file.mimeType = mime ? mime[1] : 'unknown';
+
+      if (file.size > 0) {
+        /* Format bytes as KB/MB etc. with 2 decimals */
+        var i = Math.floor(Math.log(file.size) / Math.log(1024));
+        file.formattedSize = "".concat(parseFloat((file.size / Math.pow(1024, i)).toFixed(2)), " ").concat(['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][i]);
+      } else file.formattedSize = '0 Bytes'; //const uploadButton = this.getButton('button_upload', 'upload', 'button_upload')
+
+
+      var uploadButton = this.getButton(this.msg.upload_btn_upload, 'upload', this.msg.upload_btn_upload);
+      uploadButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        uploadButton.setAttribute('disabled', 'disabled');
+
+        _this3.theme.removeInputError(_this3.uploader);
+
+        if (_this3.theme.getProgressBar) {
+          _this3.progressBar = _this3.theme.getProgressBar();
+
+          _this3.preview.appendChild(_this3.progressBar);
+        }
+
+        _this3.options.upload_handler(_this3.path, file, {
+          success: function success(url) {
+            _this3.setValue(url);
+
+            if (_this3.parent) _this3.parent.onChildEditorChange(_this3);else _this3.jsoneditor.onChange();
+            if (_this3.progressBar) _this3.preview.removeChild(_this3.progressBar);
+            uploadButton.removeAttribute('disabled');
+          },
+          failure: function failure(error) {
+            _this3.theme.addInputError(_this3.uploader, error);
+
+            if (_this3.progressBar) _this3.preview.removeChild(_this3.progressBar);
+            uploadButton.removeAttribute('disabled');
+          },
+          updateProgress: function updateProgress(progress) {
+            if (_this3.progressBar) {
+              if (progress) _this3.theme.updateProgressBar(_this3.progressBar, progress);else _this3.theme.updateProgressBarUnknown(_this3.progressBar);
+            }
+          }
+        });
+      });
+      this.preview.appendChild(this.theme.getUploadPreview(file, uploadButton, this.preview_value, this.isDropMode));
+
+      if (this.options.auto_upload) {
+        uploadButton.dispatchEvent(new window.MouseEvent('click'));
+        uploadButton.parentNode.removeChild(uploadButton);
+      }
+    }
+  }, {
+    key: "enable",
+    value: function enable() {
+      if (!this.always_disabled) {
+        if (this.uploader) this.uploader.disabled = false;
+
+        _get(_getPrototypeOf(UploadEditor.prototype), "enable", this).call(this);
+      }
+    }
+  }, {
+    key: "disable",
+    value: function disable(alwaysDisabled) {
+      if (alwaysDisabled) this.always_disabled = true;
+      if (this.uploader) this.uploader.disabled = true;
+
+      _get(_getPrototypeOf(UploadEditor.prototype), "disable", this).call(this);
+    }
+  }, {
+    key: "setValue",
+    value: function setValue(val) {
+      if (this.value !== val) {
+        this.value = val;
+        this.input.value = this.value;
+        this.onChange();
+      }
+    }
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      var _this4 = this;
+
+      /* Remove Drag'n'Drop handlers */
+      if (this.options.enable_drag_drop === true) {
+        ['dragover', 'drop'].forEach(function (ev) {
+          window.removeEventListener(ev, _this4.dragHandler, true);
+        });
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (ev) {
+          _this4.dropZone.removeEventListener(ev, _this4.dragHandler, true);
+        });
+        this.dropZone.removeEventListener('dblclick', this.clickHandler);
+        if (this.dropZone && this.dropZone.parentNode) this.dropZone.parentNode.removeChild(this.dropZone);
+      }
+
+      if (this.uploader && this.uploader.parentNode) {
+        this.uploader.removeEventListener('change', this.uploadHandler);
+        this.uploader.parentNode.removeChild(this.uploader);
+      }
+
+      if (this.browseButton && this.browseButton.parentNode) {
+        this.browseButton.removeEventListener('click', this.clickHandler);
+        this.browseButton.parentNode.removeChild(this.browseButton);
+      }
+
+      if (this.fileDisplay && this.fileDisplay.parentNode) {
+        this.fileDisplay.removeEventListener('dblclick', this.clickHandler);
+        this.fileDisplay.parentNode.removeChild(this.fileDisplay);
+      }
+
+      if (this.fileUploadGroup && this.fileUploadGroup.parentNode) this.fileUploadGroup.parentNode.removeChild(this.fileUploadGroup);
+      if (this.preview && this.preview.parentNode) this.preview.parentNode.removeChild(this.preview);
+      if (this.header && this.header.parentNode) this.header.parentNode.removeChild(this.header);
+      if (this.input && this.input.parentNode) this.input.parentNode.removeChild(this.input);
+
+      _get(_getPrototypeOf(UploadEditor.prototype), "destroy", this).call(this);
+    }
+  }, {
+    key: "isValidMimeType",
+    value: function isValidMimeType(mimeType, mimeTypesList) {
+      return mimeTypesList.reduce(function (a, v) {
+        return a || new RegExp(v.replace(/\*/g, '.*'), 'gi').test(mimeType);
+      }, false);
+    }
+  }]);
+
+  return UploadEditor;
+}(_editor_js__WEBPACK_IMPORTED_MODULE_26__["AbstractEditor"]);
+/* eslint-disable */
+
+/***/ }),
+
 /***/ "./src/editors/upload.js":
 /*!*******************************!*\
   !*** ./src/editors/upload.js ***!
@@ -24703,6 +25282,32 @@ var spectreIconlib = /*#__PURE__*/function (_AbstractIconLib) {
 
 /***/ }),
 
+/***/ "./src/popcorn/msg/upload.js":
+/*!***********************************!*\
+  !*** ./src/popcorn/msg/upload.js ***!
+  \***********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* eslint-disable */
+var ko = {
+  "upload_btn_browse": "파일 선택",
+  "upload_btn_upload": "업로드"
+};
+var eng = {
+  "upload_btn_browse": "browse",
+  "upload_btn_upload": "upload"
+};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  ko: ko,
+  eng: eng
+});
+/* eslint-disable */
+
+/***/ }),
+
 /***/ "./src/resolvers.js":
 /*!**************************!*\
   !*** ./src/resolvers.js ***!
@@ -24772,8 +25377,9 @@ var base64 = function base64(schema) {
 /* Editor for uploading files */
 
 
-var upload = function upload(schema) {
-  return schema.type === 'string' && schema.format === 'url' && window.FileReader && schema.options && schema.options.upload === Object(schema.options.upload) && 'upload';
+var upload = function upload(schema, themeName) {
+  var isPopcornTheme = themeName === 'popcorn';
+  return schema.type === 'string' && schema.format === 'url' && window.FileReader && schema.options && schema.options.upload === Object(schema.options.upload) && (isPopcornTheme ? 'uploadPopcorn' : 'upload');
 };
 /* Use the table editor for arrays with the format set to `table` */
 
@@ -24812,16 +25418,20 @@ var enumeratedProperties = function enumeratedProperties(schema) {
 /* Specialized editors for arrays of strings */
 
 
-var arraysOfStrings = function arraysOfStrings(schema) {
-  if (schema.type === 'array' && schema.items && !Array.isArray(schema.items) && ['string', 'number', 'integer'].includes(schema.items.type)) {
-    if (schema.format === 'choices') return 'arrayChoices';
+var arraysOfStrings = function arraysOfStrings(schema, themeName) {
+  var isPopcornTheme = themeName === 'popcorn';
 
-    if (schema.uniqueItems) {
-      /* if 'selectize' enabled it is expected to be selectized control */
-      if (schema.format === 'selectize') return 'arraySelectize';
-      if (schema.format === 'select2') return 'arraySelect2';
-      if (schema.items["enum"]) return 'multiselect';
-      /* otherwise it is select */
+  if (schema.type === 'array') {
+    if (schema.format === 'upload' && isPopcornTheme) return 'uploadPopcorn';else if (schema.items && !Array.isArray(schema.items) && ['string', 'number', 'integer'].includes(schema.items.type)) {
+      if (schema.format === 'choices') return 'arrayChoices';
+
+      if (schema.uniqueItems) {
+        /* if 'selectize' enabled it is expected to be selectized control */
+        if (schema.format === 'selectize') return 'arraySelectize';
+        if (schema.format === 'select2') return 'arraySelect2';
+        if (schema.items["enum"]) return 'multiselect';
+        /* otherwise it is select */
+      }
     }
   }
 };
@@ -29073,33 +29683,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "popcornTheme", function() { return popcornTheme; });
 /* harmony import */ var core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.is-array.js */ "./node_modules/core-js/modules/es.array.is-array.js");
 /* harmony import */ var core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var core_js_modules_es_object_set_prototype_of_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.object.set-prototype-of.js */ "./node_modules/core-js/modules/es.object.set-prototype-of.js");
-/* harmony import */ var core_js_modules_es_object_set_prototype_of_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_set_prototype_of_js__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var core_js_modules_es_object_get_prototype_of_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.object.get-prototype-of.js */ "./node_modules/core-js/modules/es.object.get-prototype-of.js");
-/* harmony import */ var core_js_modules_es_object_get_prototype_of_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_get_prototype_of_js__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.object.to-string.js */ "./node_modules/core-js/modules/es.object.to-string.js");
-/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var core_js_modules_es_reflect_construct_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/es.reflect.construct.js */ "./node_modules/core-js/modules/es.reflect.construct.js");
-/* harmony import */ var core_js_modules_es_reflect_construct_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_reflect_construct_js__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var core_js_modules_es_object_create_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! core-js/modules/es.object.create.js */ "./node_modules/core-js/modules/es.object.create.js");
-/* harmony import */ var core_js_modules_es_object_create_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_create_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! core-js/modules/es.object.define-property.js */ "./node_modules/core-js/modules/es.object.define-property.js");
-/* harmony import */ var core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! core-js/modules/es.symbol.js */ "./node_modules/core-js/modules/es.symbol.js");
-/* harmony import */ var core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! core-js/modules/es.symbol.description.js */ "./node_modules/core-js/modules/es.symbol.description.js");
-/* harmony import */ var core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! core-js/modules/es.symbol.iterator.js */ "./node_modules/core-js/modules/es.symbol.iterator.js");
-/* harmony import */ var core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! core-js/modules/es.array.iterator.js */ "./node_modules/core-js/modules/es.array.iterator.js");
-/* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! core-js/modules/es.string.iterator.js */ "./node_modules/core-js/modules/es.string.iterator.js");
-/* harmony import */ var core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! core-js/modules/web.dom-collections.iterator.js */ "./node_modules/core-js/modules/web.dom-collections.iterator.js");
-/* harmony import */ var core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var _theme_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../theme.js */ "./src/theme.js");
-/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../enums */ "./src/enums.js");
+/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ "./node_modules/core-js/modules/es.array.concat.js");
+/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.function.name.js */ "./node_modules/core-js/modules/es.function.name.js");
+/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var core_js_modules_es_object_set_prototype_of_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.object.set-prototype-of.js */ "./node_modules/core-js/modules/es.object.set-prototype-of.js");
+/* harmony import */ var core_js_modules_es_object_set_prototype_of_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_set_prototype_of_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var core_js_modules_es_object_get_prototype_of_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/es.object.get-prototype-of.js */ "./node_modules/core-js/modules/es.object.get-prototype-of.js");
+/* harmony import */ var core_js_modules_es_object_get_prototype_of_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_get_prototype_of_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! core-js/modules/es.object.to-string.js */ "./node_modules/core-js/modules/es.object.to-string.js");
+/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var core_js_modules_es_reflect_construct_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! core-js/modules/es.reflect.construct.js */ "./node_modules/core-js/modules/es.reflect.construct.js");
+/* harmony import */ var core_js_modules_es_reflect_construct_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_reflect_construct_js__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var core_js_modules_es_object_create_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! core-js/modules/es.object.create.js */ "./node_modules/core-js/modules/es.object.create.js");
+/* harmony import */ var core_js_modules_es_object_create_js__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_create_js__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! core-js/modules/es.object.define-property.js */ "./node_modules/core-js/modules/es.object.define-property.js");
+/* harmony import */ var core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! core-js/modules/es.symbol.js */ "./node_modules/core-js/modules/es.symbol.js");
+/* harmony import */ var core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_js__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! core-js/modules/es.symbol.description.js */ "./node_modules/core-js/modules/es.symbol.description.js");
+/* harmony import */ var core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! core-js/modules/es.symbol.iterator.js */ "./node_modules/core-js/modules/es.symbol.iterator.js");
+/* harmony import */ var core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! core-js/modules/es.array.iterator.js */ "./node_modules/core-js/modules/es.array.iterator.js");
+/* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! core-js/modules/es.string.iterator.js */ "./node_modules/core-js/modules/es.string.iterator.js");
+/* harmony import */ var core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_iterator_js__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! core-js/modules/web.dom-collections.iterator.js */ "./node_modules/core-js/modules/web.dom-collections.iterator.js");
+/* harmony import */ var core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_iterator_js__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var _theme_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../theme.js */ "./src/theme.js");
+/* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../enums */ "./src/enums.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+
 
 
 
@@ -29157,13 +29773,13 @@ var popcornTheme = /*#__PURE__*/function (_AbstractTheme) {
     function getFormControl(label, input, description, infoText, formName, options) {
       var _ref = options || {},
           _ref$labelPosition = _ref.labelPosition,
-          labelPosition = _ref$labelPosition === void 0 ? _enums__WEBPACK_IMPORTED_MODULE_14__["LABEL_POSITION"].TOP : _ref$labelPosition,
+          labelPosition = _ref$labelPosition === void 0 ? _enums__WEBPACK_IMPORTED_MODULE_16__["LABEL_POSITION"].TOP : _ref$labelPosition,
           _ref$inputSiblingLabe = _ref.inputSiblingLabel,
           inputSiblingLabel = _ref$inputSiblingLabe === void 0 ? false : _ref$inputSiblingLabe;
 
       var el = document.createElement('div');
       var labelWrap = null;
-      var isLabelPositionLeft = labelPosition === _enums__WEBPACK_IMPORTED_MODULE_14__["LABEL_POSITION"].LEFT;
+      var isLabelPositionLeft = labelPosition === _enums__WEBPACK_IMPORTED_MODULE_16__["LABEL_POSITION"].LEFT;
       el.classList.add('form-control');
 
       if (label) {
@@ -29179,14 +29795,14 @@ var popcornTheme = /*#__PURE__*/function (_AbstractTheme) {
         if (formName) label.setAttribute('for', formName);
       }
 
-      if ((input.type === 'checkbox' || input.type === 'radio') && label && !inputSiblingLabel) {
+      if (!!input && (input.type === 'checkbox' || input.type === 'radio') && label && !inputSiblingLabel) {
         input.style.width = 'auto';
         label.insertBefore(input, label.firstChild);
         if (infoText) label.appendChild(infoText);
       } else {
         var wrap = isLabelPositionLeft ? labelWrap : el;
         if (infoText && label) label.appendChild(infoText);
-        wrap.appendChild(input);
+        !!input && wrap.appendChild(input);
       }
 
       if (description) el.appendChild(description);
@@ -29280,17 +29896,62 @@ var popcornTheme = /*#__PURE__*/function (_AbstractTheme) {
     */
 
   }, {
-    key: "getDropZone",
-    value: function getDropZone(text) {
-      var el = document.createElement('div');
-      el.setAttribute('data-text', text);
-      el.classList.add('je-dropzone');
-      return el;
+    key: "setPreviewWrap",
+    value: function setPreviewWrap(target) {
+      var preview = document.createElement('div');
+      var previewList = document.createElement('ul');
+      preview.classList.add('je-upload-preview');
+      previewList.classList.add('preview-list');
+      preview.appendChild(previewList);
+      target.appendChild(preview);
+    }
+  }, {
+    key: "addPreviewListItem",
+    value: function addPreviewListItem(target, file, data, isDropMode) {
+      if (!target) return;
+      var item = document.createElement('li');
+      item.classList.add('flex');
+
+      if (isDropMode && file.mimeType.substr(0, 5) === 'image') {
+        var img = document.createElement('img');
+        img.src = data;
+        item.appendChild(img);
+      }
+
+      var info = document.createElement('div');
+      info.innerHTML += "<strong>".concat(file.name, "</strong><span>").concat(file.formattedSize, "</span>");
+      item.appendChild(info);
+      target.appendChild(item); // preview.appendChild(uploadButton)
+    }
+    /* file is an object with properties: name, type, mimeType, size amd formattedSize */
+
+  }, {
+    key: "getUploadPreview",
+    value: function getUploadPreview(file, uploadButton, data, isDropMode) {
+      var preview = document.createElement('div');
+      var previewList = document.createElement('ul');
+      preview.classList.add('je-upload-preview');
+      preview.appendChild(previewList);
+
+      if (isDropMode && file.mimeType.substr(0, 5) === 'image') {
+        var img = document.createElement('img');
+        img.src = data;
+        preview.appendChild(img);
+      }
+
+      var info = document.createElement('div');
+      info.innerHTML += "<strong>Name:</strong> ".concat(file.name, "<br><strong>Type:</strong> ").concat(file.type, "<br><strong>Size:</strong> ").concat(file.formattedSize);
+      preview.appendChild(info);
+      preview.appendChild(uploadButton);
+      var clear = document.createElement('div');
+      clear.style.clear = 'left';
+      preview.appendChild(clear);
+      return preview;
     }
   }]);
 
   return popcornTheme;
-}(_theme_js__WEBPACK_IMPORTED_MODULE_13__["AbstractTheme"]);
+}(_theme_js__WEBPACK_IMPORTED_MODULE_15__["AbstractTheme"]);
 
 /***/ }),
 

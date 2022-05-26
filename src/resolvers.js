@@ -30,7 +30,10 @@ const any = schema => schema.type === 'any' && 'multiple'
 const base64 = schema => schema.type === 'string' && schema.media && schema.media.binaryEncoding === 'base64' && 'base64'
 
 /* Editor for uploading files */
-const upload = schema => schema.type === 'string' && schema.format === 'url' && window.FileReader && schema.options && schema.options.upload === Object(schema.options.upload) && 'upload'
+const upload = (schema, themeName) => {
+  const isPopcornTheme = themeName === 'popcorn'
+  return schema.type === 'string' && schema.format === 'url' && window.FileReader && schema.options && schema.options.upload === Object(schema.options.upload) && (isPopcornTheme ? 'uploadPopcorn' : 'upload')
+}
 
 /* Use the table editor for arrays with the format set to `table` */
 const table = schema => schema.type === 'array' && schema.format === 'table' && 'table'
@@ -61,14 +64,19 @@ const enumeratedProperties = schema => {
 }
 
 /* Specialized editors for arrays of strings */
-const arraysOfStrings = schema => {
-  if (schema.type === 'array' && schema.items && !(Array.isArray(schema.items)) && ['string', 'number', 'integer'].includes(schema.items.type)) {
-    if (schema.format === 'choices') return 'arrayChoices'
-    if (schema.uniqueItems) {
-      /* if 'selectize' enabled it is expected to be selectized control */
-      if (schema.format === 'selectize') return 'arraySelectize'
-      if (schema.format === 'select2') return 'arraySelect2'
-      if (schema.items.enum) return 'multiselect' /* otherwise it is select */
+const arraysOfStrings = (schema, themeName) => {
+  const isPopcornTheme = themeName === 'popcorn'
+
+  if (schema.type === 'array') {
+    if (schema.format === 'upload' && isPopcornTheme) return 'uploadPopcorn'
+    else if (schema.items && !(Array.isArray(schema.items)) && ['string', 'number', 'integer'].includes(schema.items.type)) {
+      if (schema.format === 'choices') return 'arrayChoices'
+      if (schema.uniqueItems) {
+        /* if 'selectize' enabled it is expected to be selectized control */
+        if (schema.format === 'selectize') return 'arraySelectize'
+        if (schema.format === 'select2') return 'arraySelect2'
+        if (schema.items.enum) return 'multiselect' /* otherwise it is select */
+      }
     }
   }
 }

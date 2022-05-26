@@ -37,6 +37,7 @@ import { StepperEditor as stepper } from './stepper.js'
 import { StringEditor as string } from './string.js'
 import { TableEditor as table } from './table.js'
 import { UploadEditor as upload } from './upload.js'
+import { UploadEditor as uploadPopcorn } from './upload-popcorn.js'
 import { UuidEditor as uuid } from './uuid.js'
 import { ColorEditor as colorpicker } from './colorpicker.js'
 
@@ -76,6 +77,7 @@ export const editors = {
   string,
   table,
   upload,
+  uploadPopcorn, // 팝콘 전용 업로드
   uuid,
   colorpicker
 }

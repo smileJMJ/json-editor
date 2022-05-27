@@ -12,16 +12,25 @@ export class UploadEditor extends AbstractEditor {
     if (!this.options.compact) this.header = this.label = this.theme.getFormInputLabel(this.getTitle(), this.isRequired())
     if (this.schema.description) this.description = this.theme.getFormInputDescription(this.translateProperty(this.schema.description))
     if (this.options.infoText) this.infoButton = this.theme.getInfoButton(this.translateProperty(this.options.infoText))
-    if (this.options.innerContents) this.innerContents = this.options.innerContents // 내부 설명 콘텐츠
+
+    this.valueType = this.schema.type || 'string' // type: string / array
+    this.value = this.valueType === 'array' ? [] : null // img url 담을 array
     this.country = this.options.country || 'ko'
     this.msg = uploadMsg[this.country]
+    this.innerContents = this.options.innerContents || `
+    <h3>첨부파일 관리</h3>
+    <ul>
+        <li>파일 포맷: 이미지 파일 (JPEG, PNG, BMP...)</li>
+        <li>파일 크기: 20MB 이하 / 첨부 파일 갯수: 1개</li>
+    </ul>
+  ` // 내부 설명 콘텐츠
 
     /* Editor options */
     this.options = this.expandCallbacks('upload', extend({}, {
       title: 'Browse',
       icon: '',
-      //auto_upload: true, /* Trigger file upload button automatically */
-      auto_upload: false,
+      auto_upload: true, /* Trigger file upload button automatically */
+      //auto_upload: false,
       hide_input: false, /* Hide the Browse button and name display (Only works if 'enable_drag_drop' is true) */
       enable_drag_drop: false, /* Enable Drag&Drop uploading */
       drop_zone_text: 'Drag & Drop file here', /* Text displayed in dropzone box */
@@ -64,7 +73,7 @@ export class UploadEditor extends AbstractEditor {
         }
 
         /* Browse button */
-        this.browseButton = this.getButton(this.msg.upload_btn_browse, this.options.icon, this.msg.upload_btn_browse)
+        this.browseButton = this.getButton(this.msg.upload_btn_browse, 'browse', this.msg.upload_btn_browse)
         this.browseButton.addEventListener('click', this.clickHandler)
 
         /* Display field */
@@ -186,9 +195,9 @@ export class UploadEditor extends AbstractEditor {
     /////////
 
     if (this.isDropMode) {
-      this.makeDropMode()
+      this.setDropMode()
     } else {
-      this.makeBasicMode()
+      this.setBasicMode()
     }
 
     /* Any special formatting that needs to happen after the input is added to the dom */
@@ -198,45 +207,145 @@ export class UploadEditor extends AbstractEditor {
   }
 
   // 기본 모드 생성
-  makeBasicMode () {
-    const flexWrap = document.createElement('div')
+  setBasicMode () {
+    const gridWrap = document.createElement('div')
     const inputWrap = document.createElement('div')
     const inputNode = this.uploader || this.input
-    flexWrap.classList.add('flex')
-    this.makeInnerContents(flexWrap) // innserContents 생성
-    inputWrap.classList.add('input-wrap')
-    // inputWrap.appendChild(inputNode)
-    // inputWrap.appendChild(this.browseButton)
+    const innerContents = this.setInnerContents(gridWrap) // innserContents 생성
+    gridWrap.classList.add('grid', 'grid-cols-12')
+    inputWrap.classList.add('input-wrap','col-span-6')
+    innerContents.classList.add('col-span-6')
     inputWrap.append(inputNode, this.browseButton)
-    this.makePreview(inputWrap)
-    flexWrap.appendChild(inputWrap) 
+    this.setPreviewList(inputWrap)
+    gridWrap.appendChild(inputWrap) 
 
     this.control = this.input.controlgroup = this.theme.getFormControl(this.label, null, null, null, null, this.options)
-    this.control.appendChild(flexWrap)
+    this.control.classList.add('image-upload', 'basic')
+    this.control.appendChild(gridWrap)
 
     this.container.appendChild(this.control)
   }
 
   // drop mode 생성
-  makeDropMode () {
+  setDropMode () {
 
   }
 
   // innerContents 생성
-  makeInnerContents (target) {
+  setInnerContents (target) {
     if(!target || !this.innerContents) return
     const innerContents = document.createElement('div')
     innerContents.classList.add('inner-contents')
     innerContents.innerHTML = this.innerContents
     target.appendChild(innerContents)
+
+    return innerContents
   }
 
-  // preview 영역 생성
-  makePreview (target) {
+  // previewList 영역 생성
+  setPreviewList (target) {
     if(!target) return
-    this.preview = document.createElement('div')
-    this.preview.classList.add('preview-wrap')
-    target.appendChild(this.preview)
+    const preview = document.createElement('div')
+    const previewList = document.createElement('ul') // preview ul 생성
+
+    
+    preview.classList.add('preview-wrap', 'je-upload-preview')
+    previewList.classList.add('preview-list')
+    preview.appendChild(previewList)
+    target.appendChild(preview)
+    
+    this.preview = preview
+    this.previewList = previewList
+  }
+
+  // preview list item 생성
+  setPreviewListItem (item, file, data, isDropMode) {
+    if (!item) return
+    const info = document.createElement('div')
+    const status = document.createElement('div')
+    const inputHidden = document.createElement('input')
+
+    inputHidden.type = 'hidden'
+    item.appendChild(inputHidden)
+
+    if (isDropMode && file.mimeType.substr(0, 5) === 'image') {
+      const img = document.createElement('img')
+      img.src = data
+      info.appendChild(img)
+    }
+    info.classList.add('info')
+    info.innerHTML += `<strong>${file.name}</strong><span>${file.formattedSize}</span>`
+    item.appendChild(info)
+
+    status.classList.add('status')
+    item.appendChild(status)
+
+    return item
+  }
+
+  // preview upload button
+  setPreviewUploadButton (item, file) {
+    //const uploadButton = this.getButton('button_upload', 'upload', 'button_upload')
+    const uploadButton = this.getButton(this.msg.upload_btn_upload, 'upload', this.msg.upload_btn_upload)
+    uploadButton.addEventListener('click', (event) => {
+      event.preventDefault()
+
+      uploadButton.setAttribute('disabled', 'disabled')
+      this.theme.removeInputError(this.uploader)
+
+      // if (this.theme.getProgressBar) {
+      //   this.progressBar = this.theme.getProgressBar()
+      //   this.preview.appendChild(this.progressBar)
+      // }
+
+      this.options.upload_handler(this.path, file, {
+        success: (url) => {
+          const hidden = item.querySelector('input[type="hidden"]')
+
+          this.optimizeValue(url)
+          if(hidden) {
+            hidden.value = url
+          }
+
+          // if (this.parent) this.parent.onChildEditorChange(this)
+          // else this.jsoneditor.onChange()
+
+          //if (this.progressBar) this.preview.removeChild(this.progressBar)
+          uploadButton.removeAttribute('disabled')
+        },
+        failure: (error) => {
+          this.theme.addInputError(this.uploader, error)
+          //if (this.progressBar) this.preview.removeChild(this.progressBar)
+          uploadButton.removeAttribute('disabled')
+        },
+        updateProgress: (progress) => {
+          // if (this.progressBar) {
+          //   if (progress) this.theme.updateProgressBar(this.progressBar, progress)
+          //   else this.theme.updateProgressBarUnknown(this.progressBar)
+          // }
+        }
+      })
+    })
+
+    item.querySelector('.status').appendChild(uploadButton)
+
+    if (this.options.auto_upload) {
+      uploadButton.dispatchEvent(new window.MouseEvent('click'))
+      uploadButton.parentNode.removeChild(uploadButton)
+    }
+  }
+
+  // preview remove button
+  setPreviewRemoveButton (item, data) {
+    const removeButton = document.createElement('button')
+
+    removeButton.addEventListener('click', e => {
+      const removeUrl = item.querySelector('input[type="hidden"]').value
+      item.remove();
+      this.removeValue(removeUrl)
+    })
+
+    item.querySelector('.status').appendChild(removeButton)
   }
 
   afterInputReady () {
@@ -256,15 +365,87 @@ export class UploadEditor extends AbstractEditor {
     this.theme.afterInputReady(this.input)
   }
 
+  // refreshPreview (files) {
+  //   if (this.last_preview === this.preview_value) return
+  //   this.last_preview = this.preview_value
+
+  //   this.preview.innerHTML = ''
+
+  //   if (!this.preview_value) return
+
+  //   const file = files[0]
+
+  //   /* mime type extracted from file data. More exact than the one in the file object */
+  //   const mime = this.preview_value.match(/^data:([^;,]+)[;,]/)
+  //   file.mimeType = mime ? mime[1] : 'unknown'
+
+  //   if (file.size > 0) {
+  //     /* Format bytes as KB/MB etc. with 2 decimals */
+  //     const i = Math.floor(Math.log(file.size) / Math.log(1024))
+  //     file.formattedSize = `${parseFloat((file.size / (1024 ** i)).toFixed(2))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][i]}`
+  //   } else file.formattedSize = '0 Bytes'
+
+  //   //const uploadButton = this.getButton('button_upload', 'upload', 'button_upload')
+  //   const uploadButton = this.getButton(this.msg.upload_btn_upload, 'upload', this.msg.upload_btn_upload)
+  //   uploadButton.addEventListener('click', (event) => {
+  //     event.preventDefault()
+
+  //     uploadButton.setAttribute('disabled', 'disabled')
+  //     this.theme.removeInputError(this.uploader)
+
+  //     if (this.theme.getProgressBar) {
+  //       this.progressBar = this.theme.getProgressBar()
+  //       this.preview.appendChild(this.progressBar)
+  //     }
+
+  //     this.options.upload_handler(this.path, file, {
+  //       success: (url) => {
+  //         this.setValue(url)
+
+  //         if (this.parent) this.parent.onChildEditorChange(this)
+  //         else this.jsoneditor.onChange()
+
+  //         if (this.progressBar) this.preview.removeChild(this.progressBar)
+  //         uploadButton.removeAttribute('disabled')
+  //       },
+  //       failure: (error) => {
+  //         this.theme.addInputError(this.uploader, error)
+  //         if (this.progressBar) this.preview.removeChild(this.progressBar)
+  //         uploadButton.removeAttribute('disabled')
+  //       },
+  //       updateProgress: (progress) => {
+  //         if (this.progressBar) {
+  //           if (progress) this.theme.updateProgressBar(this.progressBar, progress)
+  //           else this.theme.updateProgressBarUnknown(this.progressBar)
+  //         }
+  //       }
+  //     })
+  //   })
+
+  //   this.preview.appendChild(this.theme.getUploadPreview(file, uploadButton, this.preview_value, this.isDropMode))
+
+  //   if (this.options.auto_upload) {
+  //     uploadButton.dispatchEvent(new window.MouseEvent('click'))
+  //     uploadButton.parentNode.removeChild(uploadButton)
+  //   }
+  // }
+
   refreshPreview (files) {
     if (this.last_preview === this.preview_value) return
     this.last_preview = this.preview_value
 
-    this.preview.innerHTML = ''
-
     if (!this.preview_value) return
 
     const file = files[0]
+    let item = this.previewList.querySelector('li')
+
+    if(this.valueType === 'array' || (this.valueType === 'string' && !item)) {
+      item = document.createElement('li')
+      item.classList.add('flex')
+    } else {
+      item = this.previewList.querySelector('li')
+      item.innerHTML = ''
+    }
 
     /* mime type extracted from file data. More exact than the one in the file object */
     const mime = this.preview_value.match(/^data:([^;,]+)[;,]/)
@@ -276,49 +457,11 @@ export class UploadEditor extends AbstractEditor {
       file.formattedSize = `${parseFloat((file.size / (1024 ** i)).toFixed(2))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][i]}`
     } else file.formattedSize = '0 Bytes'
 
-    //const uploadButton = this.getButton('button_upload', 'upload', 'button_upload')
-    const uploadButton = this.getButton(this.msg.upload_btn_upload, 'upload', this.msg.upload_btn_upload)
-    uploadButton.addEventListener('click', (event) => {
-      event.preventDefault()
-
-      uploadButton.setAttribute('disabled', 'disabled')
-      this.theme.removeInputError(this.uploader)
-
-      if (this.theme.getProgressBar) {
-        this.progressBar = this.theme.getProgressBar()
-        this.preview.appendChild(this.progressBar)
-      }
-
-      this.options.upload_handler(this.path, file, {
-        success: (url) => {
-          this.setValue(url)
-
-          if (this.parent) this.parent.onChildEditorChange(this)
-          else this.jsoneditor.onChange()
-
-          if (this.progressBar) this.preview.removeChild(this.progressBar)
-          uploadButton.removeAttribute('disabled')
-        },
-        failure: (error) => {
-          this.theme.addInputError(this.uploader, error)
-          if (this.progressBar) this.preview.removeChild(this.progressBar)
-          uploadButton.removeAttribute('disabled')
-        },
-        updateProgress: (progress) => {
-          if (this.progressBar) {
-            if (progress) this.theme.updateProgressBar(this.progressBar, progress)
-            else this.theme.updateProgressBarUnknown(this.progressBar)
-          }
-        }
-      })
-    })
-
-    this.preview.appendChild(this.theme.getUploadPreview(file, uploadButton, this.preview_value, this.isDropMode))
-
-    if (this.options.auto_upload) {
-      uploadButton.dispatchEvent(new window.MouseEvent('click'))
-      uploadButton.parentNode.removeChild(uploadButton)
-    }
+    //this.preview.appendChild(this.theme.getUploadPreview(file, uploadButton, this.preview_value, this.isDropMode))
+    this.setPreviewListItem (item, file, this.preview_value, this.isDropMode)
+    this.setPreviewUploadButton(item, file) // upload button 및 이벤트 생성
+    this.setPreviewRemoveButton(item, file) // remove button 및 이벤트 생성
+    this.previewList.appendChild(item)
   }
 
   enable () {
@@ -334,12 +477,45 @@ export class UploadEditor extends AbstractEditor {
     super.disable()
   }
 
-  setValue (val) {
-    if (this.value !== val) {
-      this.value = val
-      this.input.value = this.value
-      this.onChange()
+  optimizeValue (url) {
+    let result
+    if(!url || typeof url !== 'string') return
+    if (this.valueType === 'array') {
+      result = [...this.value, url]
+    } else { // string
+      result = url
     }
+    this.setValue(result)
+  }
+
+  removeValue (url) {
+    let result
+    if(!url || typeof url !== 'string') return
+    if(this.valueType === 'array') {
+      // TODO this.value에서 url index 추출해서 slice로 제거하기
+      let idx
+      result = [...this.value]
+      if(result.length > 1) {
+        result.some((v, i) => {
+          if (v === url) {
+            idx = i
+            return true
+          }
+        })
+        result.splice(idx, 1)
+      } else {
+        result = []
+      }
+    } else {
+      result = null
+    }
+    this.setValue(result)
+  }
+
+  setValue (val) {
+    this.value = val
+    console.log('setValue', val)
+    this.onChange()
   }
 
   destroy () {

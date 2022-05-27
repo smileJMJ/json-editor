@@ -32,7 +32,7 @@ const base64 = schema => schema.type === 'string' && schema.media && schema.medi
 /* Editor for uploading files */
 const upload = (schema, themeName) => {
   const isPopcornTheme = themeName === 'popcorn'
-  return schema.type === 'string' && schema.format === 'url' && window.FileReader && schema.options && schema.options.upload === Object(schema.options.upload) && (isPopcornTheme ? 'uploadPopcorn' : 'upload')
+  return schema.type === 'string' && (schema.format === 'upload' || schema.format === 'url') && window.FileReader && schema.options && schema.options.upload === Object(schema.options.upload) && (isPopcornTheme ? 'uploadPopcorn' : 'upload')
 }
 
 /* Use the table editor for arrays with the format set to `table` */

@@ -66,8 +66,8 @@ export class popcornTheme extends AbstractTheme {
   /*
     ErrorMsg
   */
-  addInputError (input, text) {
-    const group = this.closest(input, '.form-control')
+  addInputError (input, text, target) {
+    const group = target || this.closest(input, '.form-control')
     if (!input.errmsg) {
       const description = group && group.querySelector('p')
       input.errmsg = document.createElement('div')
@@ -89,13 +89,13 @@ export class popcornTheme extends AbstractTheme {
     }
   }
 
-  removeInputError (input) {
-    const group = this.closest(input, '.form-control')
+  removeInputError (input, target) {
+    const group = target || this.closest(input, '.form-control')
     if (input.style) {
       input.style.borderColor = ''
     }
     if (input.errmsg) input.errmsg.style.display = 'none'
-    group.classList.remove('error')
+    group && group.classList.remove('error')
   }
 
   /*

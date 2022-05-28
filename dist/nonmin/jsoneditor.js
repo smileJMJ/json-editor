@@ -21774,32 +21774,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_description_js__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ "./node_modules/core-js/modules/es.array.concat.js");
 /* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var core_js_modules_es_date_to_string_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.date.to-string.js */ "./node_modules/core-js/modules/es.date.to-string.js");
-/* harmony import */ var core_js_modules_es_date_to_string_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_date_to_string_js__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/es.object.to-string.js */ "./node_modules/core-js/modules/es.object.to-string.js");
-/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var core_js_modules_es_regexp_to_string_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! core-js/modules/es.regexp.to-string.js */ "./node_modules/core-js/modules/es.regexp.to-string.js");
-/* harmony import */ var core_js_modules_es_regexp_to_string_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_regexp_to_string_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! core-js/modules/es.function.name.js */ "./node_modules/core-js/modules/es.function.name.js");
-/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! core-js/modules/es.array.for-each.js */ "./node_modules/core-js/modules/es.array.for-each.js");
-/* harmony import */ var core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! core-js/modules/es.regexp.exec.js */ "./node_modules/core-js/modules/es.regexp.exec.js");
-/* harmony import */ var core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var core_js_modules_es_string_match_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! core-js/modules/es.string.match.js */ "./node_modules/core-js/modules/es.string.match.js");
-/* harmony import */ var core_js_modules_es_string_match_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_match_js__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var core_js_modules_es_parse_float_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! core-js/modules/es.parse-float.js */ "./node_modules/core-js/modules/es.parse-float.js");
-/* harmony import */ var core_js_modules_es_parse_float_js__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_parse_float_js__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var core_js_modules_es_number_to_fixed_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! core-js/modules/es.number.to-fixed.js */ "./node_modules/core-js/modules/es.number.to-fixed.js");
-/* harmony import */ var core_js_modules_es_number_to_fixed_js__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_number_to_fixed_js__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var core_js_modules_es_array_some_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! core-js/modules/es.array.some.js */ "./node_modules/core-js/modules/es.array.some.js");
-/* harmony import */ var core_js_modules_es_array_some_js__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_some_js__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var core_js_modules_es_array_splice_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! core-js/modules/es.array.splice.js */ "./node_modules/core-js/modules/es.array.splice.js");
-/* harmony import */ var core_js_modules_es_array_splice_js__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_splice_js__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! core-js/modules/es.array.reduce.js */ "./node_modules/core-js/modules/es.array.reduce.js");
-/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_14__);
-/* harmony import */ var core_js_modules_es_regexp_constructor_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! core-js/modules/es.regexp.constructor.js */ "./node_modules/core-js/modules/es.regexp.constructor.js");
-/* harmony import */ var core_js_modules_es_regexp_constructor_js__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_regexp_constructor_js__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.function.name.js */ "./node_modules/core-js/modules/es.function.name.js");
+/* harmony import */ var core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_function_name_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/es.array.for-each.js */ "./node_modules/core-js/modules/es.array.for-each.js");
+/* harmony import */ var core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_for_each_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! core-js/modules/es.array.is-array.js */ "./node_modules/core-js/modules/es.array.is-array.js");
+/* harmony import */ var core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var core_js_modules_es_array_map_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! core-js/modules/es.array.map.js */ "./node_modules/core-js/modules/es.array.map.js");
+/* harmony import */ var core_js_modules_es_array_map_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_map_js__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! core-js/modules/es.regexp.exec.js */ "./node_modules/core-js/modules/es.regexp.exec.js");
+/* harmony import */ var core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_regexp_exec_js__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var core_js_modules_es_string_match_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! core-js/modules/es.string.match.js */ "./node_modules/core-js/modules/es.string.match.js");
+/* harmony import */ var core_js_modules_es_string_match_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_match_js__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var core_js_modules_es_parse_float_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! core-js/modules/es.parse-float.js */ "./node_modules/core-js/modules/es.parse-float.js");
+/* harmony import */ var core_js_modules_es_parse_float_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_parse_float_js__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var core_js_modules_es_number_to_fixed_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! core-js/modules/es.number.to-fixed.js */ "./node_modules/core-js/modules/es.number.to-fixed.js");
+/* harmony import */ var core_js_modules_es_number_to_fixed_js__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_number_to_fixed_js__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var core_js_modules_es_array_some_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! core-js/modules/es.array.some.js */ "./node_modules/core-js/modules/es.array.some.js");
+/* harmony import */ var core_js_modules_es_array_some_js__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_some_js__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var core_js_modules_es_array_splice_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! core-js/modules/es.array.splice.js */ "./node_modules/core-js/modules/es.array.splice.js");
+/* harmony import */ var core_js_modules_es_array_splice_js__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_splice_js__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! core-js/modules/es.array.reduce.js */ "./node_modules/core-js/modules/es.array.reduce.js");
+/* harmony import */ var core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_reduce_js__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var core_js_modules_es_regexp_constructor_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! core-js/modules/es.regexp.constructor.js */ "./node_modules/core-js/modules/es.regexp.constructor.js");
+/* harmony import */ var core_js_modules_es_regexp_constructor_js__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_regexp_constructor_js__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var core_js_modules_es_regexp_to_string_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! core-js/modules/es.regexp.to-string.js */ "./node_modules/core-js/modules/es.regexp.to-string.js");
+/* harmony import */ var core_js_modules_es_regexp_to_string_js__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_regexp_to_string_js__WEBPACK_IMPORTED_MODULE_15__);
 /* harmony import */ var core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! core-js/modules/es.string.replace.js */ "./node_modules/core-js/modules/es.string.replace.js");
 /* harmony import */ var core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_16__);
 /* harmony import */ var core_js_modules_es_object_set_prototype_of_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! core-js/modules/es.object.set-prototype-of.js */ "./node_modules/core-js/modules/es.object.set-prototype-of.js");
@@ -21816,8 +21816,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es_object_get_own_property_descriptor_js__WEBPACK_IMPORTED_MODULE_22___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_get_own_property_descriptor_js__WEBPACK_IMPORTED_MODULE_22__);
 /* harmony import */ var core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! core-js/modules/es.object.define-property.js */ "./node_modules/core-js/modules/es.object.define-property.js");
 /* harmony import */ var core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_23___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_define_property_js__WEBPACK_IMPORTED_MODULE_23__);
-/* harmony import */ var core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! core-js/modules/es.array.is-array.js */ "./node_modules/core-js/modules/es.array.is-array.js");
-/* harmony import */ var core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_24___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_is_array_js__WEBPACK_IMPORTED_MODULE_24__);
+/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! core-js/modules/es.object.to-string.js */ "./node_modules/core-js/modules/es.object.to-string.js");
+/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_24___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_24__);
 /* harmony import */ var core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! core-js/modules/es.symbol.iterator.js */ "./node_modules/core-js/modules/es.symbol.iterator.js");
 /* harmony import */ var core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_25___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_symbol_iterator_js__WEBPACK_IMPORTED_MODULE_25__);
 /* harmony import */ var core_js_modules_es_array_iterator_js__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! core-js/modules/es.array.iterator.js */ "./node_modules/core-js/modules/es.array.iterator.js");
@@ -21954,7 +21954,7 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
         enable_drag_drop: false,
 
         /* Enable Drag&Drop uploading */
-        drop_zone_text: 'Drag & Drop file here',
+        drop_zone_text: "\uC5C5\uB85C\uB4DC\uD560 \uD30C\uC77C\uC744 \uC5EC\uAE30\uC5D0 \uB4DC\uB798\uADF8 \uD558\uC138\uC694.<br/>\uD639\uC740, \uD30C\uC77C\uC744 \uC9C1\uC811 \uC120\uD0DD\uD558\uC138\uC694.",
 
         /* Text displayed in dropzone box */
         drop_zone_top: false,
@@ -21963,12 +21963,12 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
         alt_drop_zone: '',
 
         /* Alternate DropZone DOM selector (Can be created inside another property) */
-        mime_type: '',
+        mime_type: 'image',
 
         /* If set, restricts to mime type(s). Can be either a string or an array */
-        max_upload_size: 0,
+        max_upload_size: 1024 * 1024 * 20,
 
-        /* Maximum file size allowed. 0 = no limit */
+        /* Maximum file size allowed. default: 20MB, 0 = no limit */
         upload_handler: function upload_handler(jseditor, type, file, cbs) {
           /* Default dummy test upload handler */
           window.alert("No upload_handler defined for \"".concat(jseditor.path, "\". You must create your own handler to enable upload to server"));
@@ -21977,10 +21977,6 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
       this.options.mime_type = this.options.mime_type ? [].concat(this.options.mime_type) : []; // drop mode 여부 - enable_drag_drop: true인지 여부
 
       this.isDropMode = this.options.enable_drag_drop || false;
-      /* Input that holds the base64 string */
-
-      this.input = this.theme.getFormInputField('hidden');
-      this.container.appendChild(this.input);
       /* Don't show uploader if this is readonly */
 
       if (!this.schema.readOnly && !this.schema.readonly) {
@@ -22045,9 +22041,9 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
 
           if (files && files.length) {
             if (_this.options.max_upload_size !== 0 && files[0].size > _this.options.max_upload_size) {
-              _this.theme.addInputError(_this.uploader, "Filesize too large. Max size is ".concat(_this.options.max_upload_size));
+              _this.theme.addInputError(_this.uploader, _this.msg.max_upload_size_err, _this.errmsgWrap);
             } else if (_this.options.mime_type.length !== 0 && !_this.isValidMimeType(files[0].type, _this.options.mime_type)) {
-              _this.theme.addInputError(_this.uploader, "Wrong file format. Allowed format(s): ".concat(_this.options.mime_type.toString()));
+              _this.theme.addInputError(_this.uploader, _this.msg.mime_type_err, _this.errmsgWrap);
             } else {
               if (_this.fileDisplay) _this.fileDisplay.value = files[0].name;
               var fr = new window.FileReader();
@@ -22055,7 +22051,7 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
               fr.onload = function (evt) {
                 _this.preview_value = evt.target.result;
 
-                _this.refreshPreview(files);
+                _this.refreshPreview(files, false);
 
                 _this.onChange(true);
 
@@ -22128,20 +22124,7 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
             _this.dropZone.addEventListener(ev, _this.dragHandler, true);
           });
         }
-      } // 기존 업로드 영역 생성
-      // this.preview = document.createElement('div')
-      // this.control = this.input.controlgroup = this.theme.getFormControl(this.label, this.uploader || this.input, this.description, this.infoButton, null, this.options)
-      // if (this.uploader) this.uploader.controlgroup = this.control
-      // const inputNode = this.uploader || this.input
-      // const elements = document.createElement('div')
-      // if (this.dropZone && !this.altDropZone && this.options.drop_zone_top === true) elements.appendChild(this.dropZone)
-      // if (this.fileUploadGroup) elements.appendChild(this.fileUploadGroup)
-      // if (this.dropZone && !this.altDropZone && this.options.drop_zone_top !== true) elements.appendChild(this.dropZone)
-      // elements.appendChild(this.preview)
-      // inputNode.parentNode.insertBefore(elements, inputNode.nextSibling)
-      // this.container.appendChild(this.control)
-      /////////
-
+      }
 
       if (this.isDropMode) {
         this.setDropMode();
@@ -22161,16 +22144,20 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
     value: function setBasicMode() {
       var gridWrap = document.createElement('div');
       var inputWrap = document.createElement('div');
-      var inputNode = this.uploader || this.input;
+      var inputNode = this.uploader;
+      var errmsgWrap = document.createElement('div');
       var innerContents = this.setInnerContents(gridWrap); // innserContents 생성
 
       gridWrap.classList.add('grid', 'grid-cols-12');
       inputWrap.classList.add('input-wrap', 'col-span-6');
+      errmsgWrap.classList.add('errmsg-wrap');
       innerContents.classList.add('col-span-6');
       inputWrap.append(inputNode, this.browseButton);
       this.setPreviewList(inputWrap);
+      inputWrap.appendChild(errmsgWrap);
       gridWrap.appendChild(inputWrap);
-      this.control = this.input.controlgroup = this.theme.getFormControl(this.label, null, null, null, null, this.options);
+      this.errmsgWrap = errmsgWrap;
+      this.control = this.theme.getFormControl(this.label, null, null, null, null, this.options);
       this.control.classList.add('image-upload', 'basic');
       this.control.appendChild(gridWrap);
       this.container.appendChild(this.control);
@@ -22178,7 +22165,32 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
 
   }, {
     key: "setDropMode",
-    value: function setDropMode() {} // innerContents 생성
+    value: function setDropMode() {
+      var gridWrap = document.createElement('div');
+      var inputWrap = document.createElement('div');
+      var errmsgWrap = document.createElement('div');
+      var innerContents = this.setInnerContents(gridWrap); // innserContents 생성
+
+      var inputNode = this.uploader;
+      var dropZoneText = document.createElement('div');
+      gridWrap.classList.add('grid', 'grid-cols-12');
+      innerContents.classList.add('col-span-5');
+      inputWrap.classList.add('input-wrap', 'col-span-7');
+      dropZoneText.classList.add('drop-zone-text');
+      errmsgWrap.classList.add('errmsg-wrap');
+      this.errmsgWrap = errmsgWrap;
+      this.control = this.theme.getFormControl(this.label, null, null, null, null, this.options);
+      this.control.classList.add('image-upload', 'drop');
+      if (this.dropZone && !this.altDropZone) inputWrap.appendChild(this.dropZone);
+      this.setPreviewList(inputWrap);
+      inputWrap.appendChild(errmsgWrap);
+      gridWrap.appendChild(inputWrap);
+      this.control.appendChild(gridWrap);
+      this.container.appendChild(this.control); // dropzone 내부에 추가
+
+      dropZoneText.innerHTML = this.options.drop_zone_text;
+      this.dropZone.append(dropZoneText, this.browseButton);
+    } // innerContents 생성
 
   }, {
     key: "setInnerContents",
@@ -22208,18 +22220,25 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
 
   }, {
     key: "setPreviewListItem",
-    value: function setPreviewListItem(item, file, data, isDropMode) {
+    value: function setPreviewListItem(item, file, data, isDropMode, isInitialData) {
       if (!item) return;
       var info = document.createElement('div');
       var status = document.createElement('div');
       var inputHidden = document.createElement('input');
       inputHidden.type = 'hidden';
+
+      if (isInitialData) {
+        inputHidden.value = file.downloadUrl;
+      }
+
       item.appendChild(inputHidden);
 
       if (isDropMode && file.mimeType.substr(0, 5) === 'image') {
+        var figure = document.createElement('figure');
         var img = document.createElement('img');
-        img.src = data;
-        info.appendChild(img);
+        img.src = data || file.downloadUrl;
+        figure.appendChild(img);
+        info.appendChild(figure);
       }
 
       info.classList.add('info');
@@ -22241,29 +22260,29 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
         event.preventDefault();
         uploadButton.setAttribute('disabled', 'disabled');
 
-        _this2.theme.removeInputError(_this2.uploader); // if (this.theme.getProgressBar) {
+        _this2.theme.removeInputError(_this2.uploader, _this2.errmsgWrap); // if (this.theme.getProgressBar) {
         //   this.progressBar = this.theme.getProgressBar()
         //   this.preview.appendChild(this.progressBar)
         // }
 
 
         _this2.options.upload_handler(_this2.path, file, {
-          success: function success(url) {
-            var hidden = item.querySelector('input[type="hidden"]');
+          success: function success(fileInfo) {
+            var url = fileInfo.downloadUrl;
 
             _this2.optimizeValue(url);
 
+            var hidden = item.querySelector('input[type="hidden"]');
+
             if (hidden) {
               hidden.value = url;
-            } // if (this.parent) this.parent.onChildEditorChange(this)
-            // else this.jsoneditor.onChange()
-            //if (this.progressBar) this.preview.removeChild(this.progressBar)
+            } //if (this.progressBar) this.preview.removeChild(this.progressBar)
 
 
             uploadButton.removeAttribute('disabled');
           },
           failure: function failure(error) {
-            _this2.theme.addInputError(_this2.uploader, error); //if (this.progressBar) this.preview.removeChild(this.progressBar)
+            _this2.theme.addInputError(_this2.uploader, error, _this2.errmsgWrap); //if (this.progressBar) this.preview.removeChild(this.progressBar)
 
 
             uploadButton.removeAttribute('disabled');
@@ -22289,6 +22308,7 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
       var _this3 = this;
 
       var removeButton = document.createElement('button');
+      removeButton.classList.add('circle', 'json-editor-btn-remove');
       removeButton.addEventListener('click', function (e) {
         var removeUrl = item.querySelector('input[type="hidden"]').value;
         item.remove();
@@ -22296,90 +22316,50 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
         _this3.removeValue(removeUrl);
       });
       item.querySelector('.status').appendChild(removeButton);
-    }
+    } // 초기 데이터 주입 시 preview item 노출
+
   }, {
     key: "afterInputReady",
     value: function afterInputReady() {
       var _this4 = this;
 
-      if (this.value && this.isDropMode) {
-        var img = document.createElement('img');
-        img.style.maxWidth = '100%';
-        img.style.maxHeight = '100px';
+      if (!this.value) return;
+      var onlyUrlData; // url만 남겨서 setValue 하기위한 가공 데이터
 
-        img.onload = function (event) {
-          _this4.preview.appendChild(img);
-        };
-
-        img.onerror = function (error) {
-          // eslint-disable-next-line no-console
-          console.error('upload error', error, error.currentTarget);
-        };
-
-        img.src = this.container.querySelector('a').href;
+      if (Array.isArray(this.value) && this.value.length > 0) {
+        onlyUrlData = this.value.map(function (v) {
+          v && _this4.refreshPreview(v, true);
+          return v.downloadUrl || null;
+        });
+      } else {
+        this.refreshPreview(this.value, true);
+        onlyUrlData = this.value.downloadUrl || null;
       }
 
-      this.theme.afterInputReady(this.input);
-    } // refreshPreview (files) {
-    //   if (this.last_preview === this.preview_value) return
-    //   this.last_preview = this.preview_value
-    //   this.preview.innerHTML = ''
-    //   if (!this.preview_value) return
-    //   const file = files[0]
-    //   /* mime type extracted from file data. More exact than the one in the file object */
-    //   const mime = this.preview_value.match(/^data:([^;,]+)[;,]/)
-    //   file.mimeType = mime ? mime[1] : 'unknown'
-    //   if (file.size > 0) {
-    //     /* Format bytes as KB/MB etc. with 2 decimals */
-    //     const i = Math.floor(Math.log(file.size) / Math.log(1024))
-    //     file.formattedSize = `${parseFloat((file.size / (1024 ** i)).toFixed(2))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][i]}`
-    //   } else file.formattedSize = '0 Bytes'
-    //   //const uploadButton = this.getButton('button_upload', 'upload', 'button_upload')
-    //   const uploadButton = this.getButton(this.msg.upload_btn_upload, 'upload', this.msg.upload_btn_upload)
-    //   uploadButton.addEventListener('click', (event) => {
-    //     event.preventDefault()
-    //     uploadButton.setAttribute('disabled', 'disabled')
-    //     this.theme.removeInputError(this.uploader)
-    //     if (this.theme.getProgressBar) {
-    //       this.progressBar = this.theme.getProgressBar()
-    //       this.preview.appendChild(this.progressBar)
-    //     }
-    //     this.options.upload_handler(this.path, file, {
-    //       success: (url) => {
-    //         this.setValue(url)
-    //         if (this.parent) this.parent.onChildEditorChange(this)
-    //         else this.jsoneditor.onChange()
-    //         if (this.progressBar) this.preview.removeChild(this.progressBar)
-    //         uploadButton.removeAttribute('disabled')
-    //       },
-    //       failure: (error) => {
-    //         this.theme.addInputError(this.uploader, error)
-    //         if (this.progressBar) this.preview.removeChild(this.progressBar)
-    //         uploadButton.removeAttribute('disabled')
-    //       },
-    //       updateProgress: (progress) => {
-    //         if (this.progressBar) {
-    //           if (progress) this.theme.updateProgressBar(this.progressBar, progress)
-    //           else this.theme.updateProgressBarUnknown(this.progressBar)
-    //         }
-    //       }
-    //     })
-    //   })
-    //   this.preview.appendChild(this.theme.getUploadPreview(file, uploadButton, this.preview_value, this.isDropMode))
-    //   if (this.options.auto_upload) {
-    //     uploadButton.dispatchEvent(new window.MouseEvent('click'))
-    //     uploadButton.parentNode.removeChild(uploadButton)
-    //   }
-    // }
+      this.setValue(onlyUrlData);
+    }
+    /*
+      @param {Files || object} files (object는 페이지 로드 시 주입받은 데이터)
+      @param {Boolean} isInitialData 페이지 로드시 주입받은 데이터로 preview 구성하는지 여부
+    */
 
   }, {
     key: "refreshPreview",
-    value: function refreshPreview(files) {
-      if (this.last_preview === this.preview_value) return;
-      this.last_preview = this.preview_value;
-      if (!this.preview_value) return;
-      var file = files[0];
-      var item = this.previewList.querySelector('li');
+    value: function refreshPreview(files, isInitialData) {
+      var file = isInitialData ? files : files[0];
+      var item;
+
+      if (!isInitialData) {
+        if (this.last_preview === this.preview_value) return;
+        this.last_preview = this.preview_value;
+        if (!this.preview_value) return;
+        /* mime type extracted from file data. More exact than the one in the file object */
+
+        var mime = this.preview_value.match(/^data:([^;,]+)[;,]/);
+        file.mimeType = mime ? mime[1] : 'unknown';
+      }
+
+      item = this.previewList.querySelector('li');
 
       if (this.valueType === 'array' || this.valueType === 'string' && !item) {
         item = document.createElement('li');
@@ -22388,11 +22368,6 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
         item = this.previewList.querySelector('li');
         item.innerHTML = '';
       }
-      /* mime type extracted from file data. More exact than the one in the file object */
-
-
-      var mime = this.preview_value.match(/^data:([^;,]+)[;,]/);
-      file.mimeType = mime ? mime[1] : 'unknown';
 
       if (file.size > 0) {
         /* Format bytes as KB/MB etc. with 2 decimals */
@@ -22401,7 +22376,7 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
       } else file.formattedSize = '0 Bytes'; //this.preview.appendChild(this.theme.getUploadPreview(file, uploadButton, this.preview_value, this.isDropMode))
 
 
-      this.setPreviewListItem(item, file, this.preview_value, this.isDropMode);
+      this.setPreviewListItem(item, file, this.preview_value, this.isDropMode, isInitialData);
       this.setPreviewUploadButton(item, file); // upload button 및 이벤트 생성
 
       this.setPreviewRemoveButton(item, file); // remove button 및 이벤트 생성
@@ -22463,7 +22438,7 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
           result = [];
         }
       } else {
-        result = null;
+        result = '';
       }
 
       this.setValue(result);
@@ -22472,8 +22447,7 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
     key: "setValue",
     value: function setValue(val) {
       this.value = val;
-      console.log('setValue', val);
-      this.onChange();
+      this.onChange(true);
     }
   }, {
     key: "destroy",
@@ -22510,7 +22484,6 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
       if (this.fileUploadGroup && this.fileUploadGroup.parentNode) this.fileUploadGroup.parentNode.removeChild(this.fileUploadGroup);
       if (this.preview && this.preview.parentNode) this.preview.parentNode.removeChild(this.preview);
       if (this.header && this.header.parentNode) this.header.parentNode.removeChild(this.header);
-      if (this.input && this.input.parentNode) this.input.parentNode.removeChild(this.input);
 
       _get(_getPrototypeOf(UploadEditor.prototype), "destroy", this).call(this);
     }
@@ -24088,11 +24061,15 @@ __webpack_require__.r(__webpack_exports__);
 /* eslint-disable */
 var ko = {
   "upload_btn_browse": "파일 선택",
-  "upload_btn_upload": "업로드"
+  "upload_btn_upload": "업로드",
+  "max_upload_size_err": "파일이 최대 업로드 용량을 초과하였습니다.",
+  "mime_type_err": "잘못된 파일 형식입니다."
 };
 var eng = {
   "upload_btn_browse": "browse",
-  "upload_btn_upload": "upload"
+  "upload_btn_upload": "upload",
+  "max_upload_size_err": "Filesize too large.",
+  "mime_type_err": "Wrong file format."
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
   ko: ko,
@@ -25269,7 +25246,6 @@ __webpack_require__.r(__webpack_exports__);
   ".je-infobutton-tooltip": "font-size:12px;font-weight:normal;font-family:sans-serif;visibility:hidden;background-color:rgba(50%2C%2050%2C%2050%2C%200.75);margin:0%200.25rem;color:%23fafafa;padding:0.5rem%201rem;border-radius:0.25rem;width:20rem;position:absolute",
   ".je-not-loaded": "pointer-events:none",
   ".je-header": "display:inline-block",
-  ".je-upload-preview img": "float:left;margin:0%200.5rem%200.5rem%200;max-width:100%25;max-height:5rem",
   ".je-checkbox": "display:inline-block;width:auto",
   ".je-checkbox-control--compact": "display:inline-block;margin-right:1rem",
   ".je-radio": "display:inline-block;width:auto",
@@ -28653,8 +28629,8 @@ var popcornTheme = /*#__PURE__*/function (_AbstractTheme) {
 
   }, {
     key: "addInputError",
-    value: function addInputError(input, text) {
-      var group = this.closest(input, '.form-control');
+    value: function addInputError(input, text, target) {
+      var group = target || this.closest(input, '.form-control');
 
       if (!input.errmsg) {
         var description = group && group.querySelector('p');
@@ -28681,15 +28657,15 @@ var popcornTheme = /*#__PURE__*/function (_AbstractTheme) {
     }
   }, {
     key: "removeInputError",
-    value: function removeInputError(input) {
-      var group = this.closest(input, '.form-control');
+    value: function removeInputError(input, target) {
+      var group = target || this.closest(input, '.form-control');
 
       if (input.style) {
         input.style.borderColor = '';
       }
 
       if (input.errmsg) input.errmsg.style.display = 'none';
-      group.classList.remove('error');
+      group && group.classList.remove('error');
     }
     /*
       Grid

@@ -33,11 +33,11 @@ export class UploadEditor extends AbstractEditor {
       //auto_upload: false,
       hide_input: false, /* Hide the Browse button and name display (Only works if 'enable_drag_drop' is true) */
       enable_drag_drop: false, /* Enable Drag&Drop uploading */
-      drop_zone_text: 'Drag & Drop file here', /* Text displayed in dropzone box */
+      drop_zone_text: `업로드할 파일을 여기에 드래그 하세요.<br/>혹은, 파일을 직접 선택하세요.`, /* Text displayed in dropzone box */
       drop_zone_top: false, /* Position of dropzone. true=before button input, false=after button input */
       alt_drop_zone: '', /* Alternate DropZone DOM selector (Can be created inside another property) */
-      mime_type: '', /* If set, restricts to mime type(s). Can be either a string or an array */
-      max_upload_size: 0, /* Maximum file size allowed. 0 = no limit */
+      mime_type: 'image', /* If set, restricts to mime type(s). Can be either a string or an array */
+      max_upload_size: 1024 * 1024 * 20, /* Maximum file size allowed. default: 20MB, 0 = no limit */
       upload_handler: (jseditor, type, file, cbs) => {
         /* Default dummy test upload handler */
         window.alert(`No upload_handler defined for "${jseditor.path}". You must create your own handler to enable upload to server`)
@@ -48,10 +48,6 @@ export class UploadEditor extends AbstractEditor {
 
     // drop mode 여부 - enable_drag_drop: true인지 여부
     this.isDropMode = this.options.enable_drag_drop || false
-
-    /* Input that holds the base64 string */
-    this.input = this.theme.getFormInputField('hidden')
-    this.container.appendChild(this.input)
 
     /* Don't show uploader if this is readonly */
     if (!this.schema.readOnly && !this.schema.readonly) {
@@ -113,15 +109,15 @@ export class UploadEditor extends AbstractEditor {
         const files = e.target.files || e.dataTransfer.files
         if (files && files.length) {
           if (this.options.max_upload_size !== 0 && files[0].size > this.options.max_upload_size) {
-            this.theme.addInputError(this.uploader, `Filesize too large. Max size is ${this.options.max_upload_size}`)
+            this.theme.addInputError(this.uploader, this.msg.max_upload_size_err, this.errmsgWrap)
           } else if (this.options.mime_type.length !== 0 && !this.isValidMimeType(files[0].type, this.options.mime_type)) {
-            this.theme.addInputError(this.uploader, `Wrong file format. Allowed format(s): ${this.options.mime_type.toString()}`)
+            this.theme.addInputError(this.uploader, this.msg.mime_type_err, this.errmsgWrap)
           } else {
             if (this.fileDisplay) this.fileDisplay.value = files[0].name
             let fr = new window.FileReader()
             fr.onload = (evt) => {
               this.preview_value = evt.target.result
-              this.refreshPreview(files)
+              this.refreshPreview(files, false)
               this.onChange(true)
               fr = null
             }
@@ -177,23 +173,6 @@ export class UploadEditor extends AbstractEditor {
       }
     }
 
-    // 기존 업로드 영역 생성
-    // this.preview = document.createElement('div')
-
-    // this.control = this.input.controlgroup = this.theme.getFormControl(this.label, this.uploader || this.input, this.description, this.infoButton, null, this.options)
-    // if (this.uploader) this.uploader.controlgroup = this.control
-    // const inputNode = this.uploader || this.input
-    // const elements = document.createElement('div')
-
-    // if (this.dropZone && !this.altDropZone && this.options.drop_zone_top === true) elements.appendChild(this.dropZone)
-    // if (this.fileUploadGroup) elements.appendChild(this.fileUploadGroup)
-    // if (this.dropZone && !this.altDropZone && this.options.drop_zone_top !== true) elements.appendChild(this.dropZone)
-    // elements.appendChild(this.preview)
-    // inputNode.parentNode.insertBefore(elements, inputNode.nextSibling)
-
-    // this.container.appendChild(this.control)
-    /////////
-
     if (this.isDropMode) {
       this.setDropMode()
     } else {
@@ -210,16 +189,20 @@ export class UploadEditor extends AbstractEditor {
   setBasicMode () {
     const gridWrap = document.createElement('div')
     const inputWrap = document.createElement('div')
-    const inputNode = this.uploader || this.input
+    const inputNode = this.uploader
+    const errmsgWrap = document.createElement('div')
     const innerContents = this.setInnerContents(gridWrap) // innserContents 생성
+
     gridWrap.classList.add('grid', 'grid-cols-12')
     inputWrap.classList.add('input-wrap','col-span-6')
+    errmsgWrap.classList.add('errmsg-wrap')
     innerContents.classList.add('col-span-6')
     inputWrap.append(inputNode, this.browseButton)
     this.setPreviewList(inputWrap)
+    inputWrap.appendChild(errmsgWrap)
     gridWrap.appendChild(inputWrap) 
-
-    this.control = this.input.controlgroup = this.theme.getFormControl(this.label, null, null, null, null, this.options)
+    this.errmsgWrap = errmsgWrap
+    this.control = this.theme.getFormControl(this.label, null, null, null, null, this.options)
     this.control.classList.add('image-upload', 'basic')
     this.control.appendChild(gridWrap)
 
@@ -228,7 +211,31 @@ export class UploadEditor extends AbstractEditor {
 
   // drop mode 생성
   setDropMode () {
+    const gridWrap = document.createElement('div')
+    const inputWrap = document.createElement('div')
+    const errmsgWrap = document.createElement('div')
+    const innerContents = this.setInnerContents(gridWrap) // innserContents 생성
+    const inputNode = this.uploader
+    const dropZoneText = document.createElement('div')
 
+    gridWrap.classList.add('grid', 'grid-cols-12')
+    innerContents.classList.add('col-span-5')
+    inputWrap.classList.add('input-wrap','col-span-7')
+    dropZoneText.classList.add('drop-zone-text')
+    errmsgWrap.classList.add('errmsg-wrap')
+    this.errmsgWrap = errmsgWrap
+    this.control = this.theme.getFormControl(this.label, null, null, null, null, this.options)
+    this.control.classList.add('image-upload', 'drop')
+    if (this.dropZone && !this.altDropZone) inputWrap.appendChild(this.dropZone)
+    this.setPreviewList(inputWrap)
+    inputWrap.appendChild(errmsgWrap)
+    gridWrap.appendChild(inputWrap)
+    this.control.appendChild(gridWrap)
+    this.container.appendChild(this.control)
+
+    // dropzone 내부에 추가
+    dropZoneText.innerHTML = this.options.drop_zone_text
+    this.dropZone.append(dropZoneText, this.browseButton)
   }
 
   // innerContents 생성
@@ -247,7 +254,6 @@ export class UploadEditor extends AbstractEditor {
     if(!target) return
     const preview = document.createElement('div')
     const previewList = document.createElement('ul') // preview ul 생성
-
     
     preview.classList.add('preview-wrap', 'je-upload-preview')
     previewList.classList.add('preview-list')
@@ -259,19 +265,24 @@ export class UploadEditor extends AbstractEditor {
   }
 
   // preview list item 생성
-  setPreviewListItem (item, file, data, isDropMode) {
+  setPreviewListItem (item, file, data, isDropMode, isInitialData) {
     if (!item) return
     const info = document.createElement('div')
     const status = document.createElement('div')
     const inputHidden = document.createElement('input')
 
     inputHidden.type = 'hidden'
+    if (isInitialData) {
+      inputHidden.value = file.downloadUrl
+    }
     item.appendChild(inputHidden)
 
     if (isDropMode && file.mimeType.substr(0, 5) === 'image') {
+      const figure = document.createElement('figure')
       const img = document.createElement('img')
-      img.src = data
-      info.appendChild(img)
+      img.src = data || file.downloadUrl
+      figure.appendChild(img)
+      info.appendChild(figure)
     }
     info.classList.add('info')
     info.innerHTML += `<strong>${file.name}</strong><span>${file.formattedSize}</span>`
@@ -291,7 +302,7 @@ export class UploadEditor extends AbstractEditor {
       event.preventDefault()
 
       uploadButton.setAttribute('disabled', 'disabled')
-      this.theme.removeInputError(this.uploader)
+      this.theme.removeInputError(this.uploader, this.errmsgWrap)
 
       // if (this.theme.getProgressBar) {
       //   this.progressBar = this.theme.getProgressBar()
@@ -299,22 +310,19 @@ export class UploadEditor extends AbstractEditor {
       // }
 
       this.options.upload_handler(this.path, file, {
-        success: (url) => {
-          const hidden = item.querySelector('input[type="hidden"]')
-
+        success: (fileInfo) => {
+          const url = fileInfo.downloadUrl
           this.optimizeValue(url)
+          const hidden = item.querySelector('input[type="hidden"]')
           if(hidden) {
             hidden.value = url
           }
-
-          // if (this.parent) this.parent.onChildEditorChange(this)
-          // else this.jsoneditor.onChange()
 
           //if (this.progressBar) this.preview.removeChild(this.progressBar)
           uploadButton.removeAttribute('disabled')
         },
         failure: (error) => {
-          this.theme.addInputError(this.uploader, error)
+          this.theme.addInputError(this.uploader, error, this.errmsgWrap)
           //if (this.progressBar) this.preview.removeChild(this.progressBar)
           uploadButton.removeAttribute('disabled')
         },
@@ -338,6 +346,7 @@ export class UploadEditor extends AbstractEditor {
   // preview remove button
   setPreviewRemoveButton (item, data) {
     const removeButton = document.createElement('button')
+    removeButton.classList.add('circle', 'json-editor-btn-remove')
 
     removeButton.addEventListener('click', e => {
       const removeUrl = item.querySelector('input[type="hidden"]').value
@@ -348,96 +357,45 @@ export class UploadEditor extends AbstractEditor {
     item.querySelector('.status').appendChild(removeButton)
   }
 
+  // 초기 데이터 주입 시 preview item 노출
   afterInputReady () {
-    if (this.value && this.isDropMode) {
-      const img = document.createElement('img')
-      img.style.maxWidth = '100%'
-      img.style.maxHeight = '100px'
-      img.onload = (event) => {
-        this.preview.appendChild(img)
-      }
-      img.onerror = error => {
-        // eslint-disable-next-line no-console
-        console.error('upload error', error, error.currentTarget)
-      }
-      img.src = this.container.querySelector('a').href
+    if(!this.value) return
+
+    let onlyUrlData // url만 남겨서 setValue 하기위한 가공 데이터
+
+    if (Array.isArray(this.value) && this.value.length > 0) {
+      onlyUrlData = this.value.map(v => {
+        v && this.refreshPreview(v, true)
+        return v.downloadUrl || null
+      })
+    } else {
+      this.refreshPreview(this.value, true)
+      onlyUrlData = this.value.downloadUrl || null
     }
-    this.theme.afterInputReady(this.input)
+
+    this.setValue(onlyUrlData)
   }
 
-  // refreshPreview (files) {
-  //   if (this.last_preview === this.preview_value) return
-  //   this.last_preview = this.preview_value
+  /*
+    @param {Files || object} files (object는 페이지 로드 시 주입받은 데이터)
+    @param {Boolean} isInitialData 페이지 로드시 주입받은 데이터로 preview 구성하는지 여부
+  */
+  refreshPreview (files, isInitialData) {
+    const file = isInitialData ? files : files[0]
+    let item
 
-  //   this.preview.innerHTML = ''
+    if (!isInitialData) {
+      if (this.last_preview === this.preview_value) return
+      this.last_preview = this.preview_value
 
-  //   if (!this.preview_value) return
+      if (!this.preview_value) return
 
-  //   const file = files[0]
+      /* mime type extracted from file data. More exact than the one in the file object */
+      const mime = this.preview_value.match(/^data:([^;,]+)[;,]/)
+      file.mimeType = mime ? mime[1] : 'unknown'
+    }
 
-  //   /* mime type extracted from file data. More exact than the one in the file object */
-  //   const mime = this.preview_value.match(/^data:([^;,]+)[;,]/)
-  //   file.mimeType = mime ? mime[1] : 'unknown'
-
-  //   if (file.size > 0) {
-  //     /* Format bytes as KB/MB etc. with 2 decimals */
-  //     const i = Math.floor(Math.log(file.size) / Math.log(1024))
-  //     file.formattedSize = `${parseFloat((file.size / (1024 ** i)).toFixed(2))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][i]}`
-  //   } else file.formattedSize = '0 Bytes'
-
-  //   //const uploadButton = this.getButton('button_upload', 'upload', 'button_upload')
-  //   const uploadButton = this.getButton(this.msg.upload_btn_upload, 'upload', this.msg.upload_btn_upload)
-  //   uploadButton.addEventListener('click', (event) => {
-  //     event.preventDefault()
-
-  //     uploadButton.setAttribute('disabled', 'disabled')
-  //     this.theme.removeInputError(this.uploader)
-
-  //     if (this.theme.getProgressBar) {
-  //       this.progressBar = this.theme.getProgressBar()
-  //       this.preview.appendChild(this.progressBar)
-  //     }
-
-  //     this.options.upload_handler(this.path, file, {
-  //       success: (url) => {
-  //         this.setValue(url)
-
-  //         if (this.parent) this.parent.onChildEditorChange(this)
-  //         else this.jsoneditor.onChange()
-
-  //         if (this.progressBar) this.preview.removeChild(this.progressBar)
-  //         uploadButton.removeAttribute('disabled')
-  //       },
-  //       failure: (error) => {
-  //         this.theme.addInputError(this.uploader, error)
-  //         if (this.progressBar) this.preview.removeChild(this.progressBar)
-  //         uploadButton.removeAttribute('disabled')
-  //       },
-  //       updateProgress: (progress) => {
-  //         if (this.progressBar) {
-  //           if (progress) this.theme.updateProgressBar(this.progressBar, progress)
-  //           else this.theme.updateProgressBarUnknown(this.progressBar)
-  //         }
-  //       }
-  //     })
-  //   })
-
-  //   this.preview.appendChild(this.theme.getUploadPreview(file, uploadButton, this.preview_value, this.isDropMode))
-
-  //   if (this.options.auto_upload) {
-  //     uploadButton.dispatchEvent(new window.MouseEvent('click'))
-  //     uploadButton.parentNode.removeChild(uploadButton)
-  //   }
-  // }
-
-  refreshPreview (files) {
-    if (this.last_preview === this.preview_value) return
-    this.last_preview = this.preview_value
-
-    if (!this.preview_value) return
-
-    const file = files[0]
-    let item = this.previewList.querySelector('li')
+    item = this.previewList.querySelector('li')
 
     if(this.valueType === 'array' || (this.valueType === 'string' && !item)) {
       item = document.createElement('li')
@@ -447,10 +405,6 @@ export class UploadEditor extends AbstractEditor {
       item.innerHTML = ''
     }
 
-    /* mime type extracted from file data. More exact than the one in the file object */
-    const mime = this.preview_value.match(/^data:([^;,]+)[;,]/)
-    file.mimeType = mime ? mime[1] : 'unknown'
-
     if (file.size > 0) {
       /* Format bytes as KB/MB etc. with 2 decimals */
       const i = Math.floor(Math.log(file.size) / Math.log(1024))
@@ -458,7 +412,7 @@ export class UploadEditor extends AbstractEditor {
     } else file.formattedSize = '0 Bytes'
 
     //this.preview.appendChild(this.theme.getUploadPreview(file, uploadButton, this.preview_value, this.isDropMode))
-    this.setPreviewListItem (item, file, this.preview_value, this.isDropMode)
+    this.setPreviewListItem (item, file, this.preview_value, this.isDropMode, isInitialData)
     this.setPreviewUploadButton(item, file) // upload button 및 이벤트 생성
     this.setPreviewRemoveButton(item, file) // remove button 및 이벤트 생성
     this.previewList.appendChild(item)
@@ -507,15 +461,14 @@ export class UploadEditor extends AbstractEditor {
         result = []
       }
     } else {
-      result = null
+      result = ''
     }
     this.setValue(result)
   }
 
   setValue (val) {
     this.value = val
-    console.log('setValue', val)
-    this.onChange()
+    this.onChange(true)
   }
 
   destroy () {
@@ -546,7 +499,6 @@ export class UploadEditor extends AbstractEditor {
     if (this.fileUploadGroup && this.fileUploadGroup.parentNode) this.fileUploadGroup.parentNode.removeChild(this.fileUploadGroup)
     if (this.preview && this.preview.parentNode) this.preview.parentNode.removeChild(this.preview)
     if (this.header && this.header.parentNode) this.header.parentNode.removeChild(this.header)
-    if (this.input && this.input.parentNode) this.input.parentNode.removeChild(this.input)
 
     super.destroy()
   }

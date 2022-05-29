@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { defaults } from './defaults.js'
 import { Validator } from './validator.js'
 import { SchemaLoader } from './schemaloader.js'
@@ -89,8 +90,8 @@ export class JSONEditor {
     /* Starting data */
     if (hasOwnProperty(this.options, 'startval')) this.root.setValue(this.options.startval)
 
-    this.validation_results = this.validator.validate(this.root.getValue()) // 해당 코드는 정상적인 밸리데이션 동작을 위해 초기 실행되어야 함
-    isLoadValidate && this.root.showValidationErrors(this.validation_results)
+    //this.validation_results = this.validator.validate(this.root.getValue()) // 해당 코드는 정상적인 밸리데이션 동작을 위해 초기 실행되어야 함
+    //isLoadValidate && this.root.showValidationErrors(this.validation_results)
     this.ready = true
     this.element.classList.remove('je-not-loaded')
     this.element.classList.add('je-ready')
@@ -98,8 +99,8 @@ export class JSONEditor {
     /* Fire ready event asynchronously */
     window.requestAnimationFrame(() => {
       if (!this.ready) return
-      this.validation_results = this.validator.validate(this.root.getValue()) // 해당 코드는 정상적인 밸리데이션 동작을 위해 초기 실행되어야 함
-      isLoadValidate && this.root.showValidationErrors(this.validation_results)
+      //this.validation_results = this.validator.validate(this.root.getValue()) // 해당 코드는 정상적인 밸리데이션 동작을 위해 초기 실행되어야 함
+      //isLoadValidate && this.root.showValidationErrors(this.validation_results)
       this.trigger('ready')
       this.trigger('change')
     })
@@ -131,7 +132,8 @@ export class JSONEditor {
 
   // submit 진행 시 유효성검사 진행 후 에러메시지 노출
   validateSubmit () {
-    const results = this.validator.validate(this.root.getValue())
+    const results = this.validator.validate(this.root.getValue(), true)
+    console.log(results)
     this.root.showValidationErrors(results)
 
     return results
@@ -237,7 +239,7 @@ export class JSONEditor {
     return new editorClass(options, JSONEditor.defaults, depthCounter)
   }
 
-  onChange () {
+  onChange (value, path) {
     if (!this.ready) return
 
     if (this.firing_change) return
@@ -248,13 +250,42 @@ export class JSONEditor {
       if (!this.ready) return
 
       /* Validate and cache results */
-      this.validation_results = this.validator.validate(this.root.getValue())
+      //this.validation_results = this.validator.validate(this.root.getValue())
 
-      if (this.options.show_errors !== 'never') {
-        this.root.showValidationErrors(this.validation_results)
-      } else {
-        this.root.showValidationErrors([])
-      }
+      // if (this.options.show_errors !== 'never') {
+      //   this.root.showValidationErrors(this.validation_results)
+      // } else {
+      //   this.root.showValidationErrors([])
+      // }
+
+      // if (value) {
+      //   //this.validation_results = this.validator.validate(value)
+      //   this.validation_results = this.validator.validate(value, false)
+      //   console.log('error', this.validation_results)
+
+      //   if (this.options.show_errors !== 'never') {
+      //     this.root.showValidationErrors(this.validation_results)
+      //   } else {
+      //     this.root.showValidationErrors([])
+      //   }
+      // }
+
+      /* Fire change event */
+      this.trigger('change')
+    })
+
+    return this
+  }
+
+  onChangeNoValidate () {
+    if (!this.ready) return
+
+    if (this.firing_change) return
+    this.firing_change = true
+
+    window.requestAnimationFrame(() => {
+      this.firing_change = false
+      if (!this.ready) return
 
       /* Fire change event */
       this.trigger('change')
@@ -421,3 +452,4 @@ Object.assign(JSONEditor.defaults.themes, themes)
 Object.assign(JSONEditor.defaults.editors, editors)
 Object.assign(JSONEditor.defaults.templates, templates)
 Object.assign(JSONEditor.defaults.iconlibs, iconlibs)
+/* eslint-disable */

@@ -8107,6 +8107,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+/* eslint-disable */
 
 
 
@@ -8223,27 +8224,24 @@ var JSONEditor = /*#__PURE__*/function () {
                 this.root.postBuild();
                 /* Starting data */
 
-                if (Object(_utilities_js__WEBPACK_IMPORTED_MODULE_31__["hasOwnProperty"])(this.options, 'startval')) this.root.setValue(this.options.startval);
-                this.validation_results = this.validator.validate(this.root.getValue()); // 해당 코드는 정상적인 밸리데이션 동작을 위해 초기 실행되어야 함
+                if (Object(_utilities_js__WEBPACK_IMPORTED_MODULE_31__["hasOwnProperty"])(this.options, 'startval')) this.root.setValue(this.options.startval); //this.validation_results = this.validator.validate(this.root.getValue()) // 해당 코드는 정상적인 밸리데이션 동작을 위해 초기 실행되어야 함
+                //isLoadValidate && this.root.showValidationErrors(this.validation_results)
 
-                isLoadValidate && this.root.showValidationErrors(this.validation_results);
                 this.ready = true;
                 this.element.classList.remove('je-not-loaded');
                 this.element.classList.add('je-ready');
                 /* Fire ready event asynchronously */
 
                 window.requestAnimationFrame(function () {
-                  if (!_this2.ready) return;
-                  _this2.validation_results = _this2.validator.validate(_this2.root.getValue()); // 해당 코드는 정상적인 밸리데이션 동작을 위해 초기 실행되어야 함
-
-                  isLoadValidate && _this2.root.showValidationErrors(_this2.validation_results);
+                  if (!_this2.ready) return; //this.validation_results = this.validator.validate(this.root.getValue()) // 해당 코드는 정상적인 밸리데이션 동작을 위해 초기 실행되어야 함
+                  //isLoadValidate && this.root.showValidationErrors(this.validation_results)
 
                   _this2.trigger('ready');
 
                   _this2.trigger('change');
                 });
 
-              case 23:
+              case 21:
               case "end":
                 return _context.stop();
             }
@@ -8287,7 +8285,8 @@ var JSONEditor = /*#__PURE__*/function () {
   }, {
     key: "validateSubmit",
     value: function validateSubmit() {
-      var results = this.validator.validate(this.root.getValue());
+      var results = this.validator.validate(this.root.getValue(), true);
+      console.log(results);
       this.root.showValidationErrors(results);
       return results;
     }
@@ -8403,7 +8402,7 @@ var JSONEditor = /*#__PURE__*/function () {
     }
   }, {
     key: "onChange",
-    value: function onChange() {
+    value: function onChange(value, path) {
       var _this3 = this;
 
       if (!this.ready) return;
@@ -8413,18 +8412,43 @@ var JSONEditor = /*#__PURE__*/function () {
         _this3.firing_change = false;
         if (!_this3.ready) return;
         /* Validate and cache results */
+        //this.validation_results = this.validator.validate(this.root.getValue())
+        // if (this.options.show_errors !== 'never') {
+        //   this.root.showValidationErrors(this.validation_results)
+        // } else {
+        //   this.root.showValidationErrors([])
+        // }
+        // if (value) {
+        //   //this.validation_results = this.validator.validate(value)
+        //   this.validation_results = this.validator.validate(value, false)
+        //   console.log('error', this.validation_results)
+        //   if (this.options.show_errors !== 'never') {
+        //     this.root.showValidationErrors(this.validation_results)
+        //   } else {
+        //     this.root.showValidationErrors([])
+        //   }
+        // }
 
-        _this3.validation_results = _this3.validator.validate(_this3.root.getValue());
-
-        if (_this3.options.show_errors !== 'never') {
-          _this3.root.showValidationErrors(_this3.validation_results);
-        } else {
-          _this3.root.showValidationErrors([]);
-        }
         /* Fire change event */
 
-
         _this3.trigger('change');
+      });
+      return this;
+    }
+  }, {
+    key: "onChangeNoValidate",
+    value: function onChangeNoValidate() {
+      var _this4 = this;
+
+      if (!this.ready) return;
+      if (this.firing_change) return;
+      this.firing_change = true;
+      window.requestAnimationFrame(function () {
+        _this4.firing_change = false;
+        if (!_this4.ready) return;
+        /* Fire change event */
+
+        _this4.trigger('change');
       });
       return this;
     }
@@ -8604,6 +8628,7 @@ Object.assign(JSONEditor.defaults.themes, _themes_index_js__WEBPACK_IMPORTED_MOD
 Object.assign(JSONEditor.defaults.editors, _editors_index_js__WEBPACK_IMPORTED_MODULE_27__["editors"]);
 Object.assign(JSONEditor.defaults.templates, _templates_index_js__WEBPACK_IMPORTED_MODULE_28__["templates"]);
 Object.assign(JSONEditor.defaults.iconlibs, _iconlibs_index_js__WEBPACK_IMPORTED_MODULE_29__["iconlibs"]);
+/* eslint-disable */
 
 /***/ }),
 
@@ -9250,6 +9275,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -9286,6 +9313,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+/* eslint-disable */
 
 /**
  * All editors should extend from this class
@@ -9331,7 +9359,17 @@ var AbstractEditor = /*#__PURE__*/function () {
   }, {
     key: "change",
     value: function change() {
-      if (this.parent) this.parent.onChildEditorChange(this);else if (this.jsoneditor) this.jsoneditor.onChange();
+      var isRootData = this.formname === this.key;
+      var validateTargetData = !isRootData ? _defineProperty({}, this.key, this.value) : null; //console.log(this, this.formname, this.key, validateTargetData)
+
+      if (this.parent) {
+        // objec storage 하위 자식 에디터
+        //this.parent.onChildEditorChange(this)
+        this.jsoneditor.onChange(validateTargetData);
+      } else if (this.jsoneditor) {
+        // root editor
+        this.jsoneditor.onChange(validateTargetData);
+      }
     }
   }, {
     key: "onChange",
@@ -10041,10 +10079,10 @@ var AbstractEditor = /*#__PURE__*/function () {
       var _this9 = this;
 
       var callback = this.defaults.callbacks[scope];
-      Object.entries(options).forEach(function (_ref) {
-        var _ref2 = _slicedToArray(_ref, 2),
-            key = _ref2[0],
-            value = _ref2[1];
+      Object.entries(options).forEach(function (_ref2) {
+        var _ref3 = _slicedToArray(_ref2, 2),
+            key = _ref3[0],
+            value = _ref3[1];
 
         if (value === Object(value)) {
           options[key] = _this9.expandCallbacks(scope, value);
@@ -10061,6 +10099,7 @@ var AbstractEditor = /*#__PURE__*/function () {
 
   return AbstractEditor;
 }();
+/* eslint-disable */
 
 /***/ }),
 
@@ -20986,7 +21025,7 @@ var StringEditor = /*#__PURE__*/function (_AbstractEditor) {
     value: function showValidationErrors(errors) {
       var _this3 = this;
 
-      if (this.jsoneditor.options.show_errors === 'always') {} else if (!this.is_dirty && this.previous_error_setting === this.jsoneditor.options.show_errors) return;
+      if (this.jsoneditor.options.show_errors === 'always') {} else if (this.is_dirty === false && this.previous_error_setting === this.jsoneditor.options.show_errors) return;
 
       this.previous_error_setting = this.jsoneditor.options.show_errors;
 
@@ -30436,6 +30475,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+/* eslint-disable */
 
 
 var Validator = /*#__PURE__*/function () {
@@ -30449,7 +30489,8 @@ var Validator = /*#__PURE__*/function () {
     this.options = options || {};
     this.translate = this.jsoneditor.translate || defaults.translate;
     this.translateProperty = this.jsoneditor.translateProperty || defaults.translateProperty;
-    this.defaults = defaults; // 필수값 체크
+    this.defaults = defaults;
+    this.isInitialValidate = true; // 필수값 체크
 
     this._requiredSchema = function (schema, value, path) {
       var errors = [];
@@ -31172,25 +31213,46 @@ var Validator = /*#__PURE__*/function () {
     value: function _getSchema(schema) {
       return typeof schema === 'undefined' ? Object(_utilities_js__WEBPACK_IMPORTED_MODULE_34__["extend"])({}, this.jsoneditor.expandRefs(this.schema)) : schema;
     }
+    /*
+      @param {Boolean} isSubmitValidate validateSubmit()에서 실행했는지 여부
+    */
+
   }, {
     key: "validate",
-    value: function validate(value) {
-      return this._validateSchema(this.schema, value);
-    }
+    value: function validate(value, isSubmitValidate, path) {
+      if (!this.jsoneditor.options.loadValidate && this.isInitialValidate) {
+        // 로드 시 밸리데이션 실행할지 여부
+        this.isInitialValidate = false;
+        return [];
+      }
+
+      return this._validateSchema(this.schema, value, path, isSubmitValidate);
+    } // validateSchema (path, value, isSubmitValidate) {
+    //   console.log(path, value, isSubmitValidate)
+    //   if(!this.jsoneditor.options.loadValidate && this.isInitialValidate) { // 로드 시 밸리데이션 실행할지 여부
+    //     this.isInitialValidate = false
+    //     return []
+    //   }
+    //   return this._validateSchema(this.schema, value, path, isSubmitValidate)
+    // }
+
   }, {
     key: "_validateSchema",
-    value: function _validateSchema(schema, value, path) {
+    value: function _validateSchema(schema, value, path, isSubmitValidate) {
       var _this14 = this;
 
       var errors = [];
       path = path || this.jsoneditor.root.formname;
+      console.log('valid path', path);
       /* Work on a copy of the schema */
 
       schema = Object(_utilities_js__WEBPACK_IMPORTED_MODULE_34__["extend"])({}, this.jsoneditor.expandRefs(schema));
       /*
-       * Type Agnostic Validation
-       */
-      // required 지정한 데이터 확인
+        required 지정한 데이터 확인
+        - validateSubmit 발생 시에만 required 체크
+        - core.onChange 발생 시 root.getValue 대상이어서 required 체크때문에 모든 필드 에러 발생함
+      */
+      //if (isSubmitValidate && Array.isArray(schema.required) && schema.required.length > 0) {
 
       if (Array.isArray(schema.required) && schema.required.length > 0) {
         var requiredErrors = this._requiredSchema(schema, value, path);
@@ -31199,11 +31261,10 @@ var Validator = /*#__PURE__*/function () {
       }
       /* Version 3 `required` and `required_by_default` */
       // value값이 없을 때 - required로 설정하고 값이 없을 때
+      // if (typeof value === 'undefined') {
+      //   return this._validateV3Required(schema, value, path)
+      // }
 
-
-      if (typeof value === 'undefined') {
-        return this._validateV3Required(schema, value, path);
-      }
 
       Object.keys(schema).forEach(function (key) {
         if (_this14._validateSubSchema[key]) {
@@ -31561,6 +31622,7 @@ var Validator = /*#__PURE__*/function () {
 
   return Validator;
 }();
+/* eslint-disable */
 
 /***/ }),
 

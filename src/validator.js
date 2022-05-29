@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ipValidator } from './validators/ip-validator.js'
 import { extend, hasOwnProperty } from './utilities.js'
 
@@ -9,6 +10,7 @@ export class Validator {
     this.translate = this.jsoneditor.translate || defaults.translate
     this.translateProperty = this.jsoneditor.translateProperty || defaults.translateProperty
     this.defaults = defaults
+    this.isInitialValidate = true
 
     // 필수값 체크
     this._requiredSchema = (schema, value, path) => {
@@ -590,21 +592,40 @@ export class Validator {
     return typeof schema === 'undefined' ? extend({}, this.jsoneditor.expandRefs(this.schema)) : schema
   }
 
-  validate (value) {
-    return this._validateSchema(this.schema, value)
+  /*
+    @param {Boolean} isSubmitValidate validateSubmit()에서 실행했는지 여부
+  */
+  validate (value, isSubmitValidate, path) {
+    if(!this.jsoneditor.options.loadValidate && this.isInitialValidate) { // 로드 시 밸리데이션 실행할지 여부
+      this.isInitialValidate = false
+      return []
+    }
+    return this._validateSchema(this.schema, value, path, isSubmitValidate)
   }
 
-  _validateSchema (schema, value, path) {
+  // validateSchema (path, value, isSubmitValidate) {
+  //   console.log(path, value, isSubmitValidate)
+  //   if(!this.jsoneditor.options.loadValidate && this.isInitialValidate) { // 로드 시 밸리데이션 실행할지 여부
+  //     this.isInitialValidate = false
+  //     return []
+  //   }
+  //   return this._validateSchema(this.schema, value, path, isSubmitValidate)
+  // }
+
+  _validateSchema (schema, value, path, isSubmitValidate) {
     const errors = []
     path = path || this.jsoneditor.root.formname
+    console.log('valid path', path)
 
     /* Work on a copy of the schema */
     schema = extend({}, this.jsoneditor.expandRefs(schema))
-    /*
-     * Type Agnostic Validation
-     */
 
-    // required 지정한 데이터 확인
+    /*
+      required 지정한 데이터 확인
+      - validateSubmit 발생 시에만 required 체크
+      - core.onChange 발생 시 root.getValue 대상이어서 required 체크때문에 모든 필드 에러 발생함
+    */
+    //if (isSubmitValidate && Array.isArray(schema.required) && schema.required.length > 0) {
     if (Array.isArray(schema.required) && schema.required.length > 0) {
       const requiredErrors = this._requiredSchema(schema, value, path)
       errors.push(...requiredErrors)
@@ -612,9 +633,9 @@ export class Validator {
 
     /* Version 3 `required` and `required_by_default` */
     // value값이 없을 때 - required로 설정하고 값이 없을 때
-    if (typeof value === 'undefined') {
-      return this._validateV3Required(schema, value, path)
-    }
+    // if (typeof value === 'undefined') {
+    //   return this._validateV3Required(schema, value, path)
+    // }
 
     Object.keys(schema).forEach(key => {
       if (this._validateSubSchema[key]) {
@@ -911,3 +932,4 @@ export class Validator {
     }
   }
 }
+/* eslint-disable */

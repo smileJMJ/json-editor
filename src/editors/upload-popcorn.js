@@ -410,10 +410,9 @@ export class UploadEditor extends AbstractEditor {
       const i = Math.floor(Math.log(file.size) / Math.log(1024))
       file.formattedSize = `${parseFloat((file.size / (1024 ** i)).toFixed(2))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][i]}`
     } else file.formattedSize = '0 Bytes'
-
-    //this.preview.appendChild(this.theme.getUploadPreview(file, uploadButton, this.preview_value, this.isDropMode))
+    
     this.setPreviewListItem (item, file, this.preview_value, this.isDropMode, isInitialData)
-    this.setPreviewUploadButton(item, file) // upload button 및 이벤트 생성
+    !isInitialData && this.setPreviewUploadButton(item, file) // upload button 및 이벤트 생성. 초기 데이터 주입 시엔 실행 X
     this.setPreviewRemoveButton(item, file) // remove button 및 이벤트 생성
     this.previewList.appendChild(item)
   }

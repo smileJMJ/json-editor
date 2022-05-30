@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { extend, hasOwnProperty } from './utilities.js'
 
 /**
@@ -43,17 +42,10 @@ export class AbstractEditor {
   }
 
   change () {
-    const isRootData = this.formname === this.key
-    const validateTargetData = !isRootData ? { [this.key]: this.value } : null
-    //console.log(this, this.formname, this.key, validateTargetData)
-
-    if (this.parent) { // objec storage 하위 자식 에디터
-      //this.parent.onChildEditorChange(this)
-      this.jsoneditor.onChange(validateTargetData)
-    }
-    else if (this.jsoneditor) { // root editor
-      this.jsoneditor.onChange(validateTargetData)
-    }
+    if (this.parent) {
+      this.jsoneditor.changeTargetPath = this.path
+      this.parent.onChildEditorChange(this)
+    } else if (this.jsoneditor) this.jsoneditor.onChange(this.jsoneditor.changeTargetPath)
   }
 
   onChange (bubble) {
@@ -714,4 +706,3 @@ export class AbstractEditor {
 
   }
 }
-/* eslint-disable */

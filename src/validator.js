@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { ipValidator } from './validators/ip-validator.js'
 import { extend, hasOwnProperty } from './utilities.js'
 
@@ -17,7 +16,7 @@ export class Validator {
       const errors = []
       if (Array.isArray(schema.required)) {
         schema.required.forEach(e => {
-          if (typeof value[e] !== 'boolean' && !value[e]) {
+          if (typeof value[e] !== 'boolean' && (!value[e] || (Array.isArray(value[e]) && !value[e].length))) {
             const editor = this.jsoneditor.getEditor(`${path}.${e}`)
             if (editor && editor.dependenciesFulfilled === false) return
             /* Ignore required error if editor is of type "button" or "info" */
@@ -595,27 +594,17 @@ export class Validator {
   /*
     @param {Boolean} isSubmitValidate validateSubmit()에서 실행했는지 여부
   */
-  validate (value, isSubmitValidate, path) {
-    if(!this.jsoneditor.options.loadValidate && this.isInitialValidate) { // 로드 시 밸리데이션 실행할지 여부
+  validate (value, isSubmitValidate) {
+    if (!this.jsoneditor.options.loadValidate && this.isInitialValidate) { // 로드 시 밸리데이션 실행할지 여부
       this.isInitialValidate = false
       return []
     }
-    return this._validateSchema(this.schema, value, path, isSubmitValidate)
+    return this._validateSchema(this.schema, value, null, isSubmitValidate)
   }
 
-  // validateSchema (path, value, isSubmitValidate) {
-  //   console.log(path, value, isSubmitValidate)
-  //   if(!this.jsoneditor.options.loadValidate && this.isInitialValidate) { // 로드 시 밸리데이션 실행할지 여부
-  //     this.isInitialValidate = false
-  //     return []
-  //   }
-  //   return this._validateSchema(this.schema, value, path, isSubmitValidate)
-  // }
-
-  _validateSchema (schema, value, path, isSubmitValidate) {
+  _validateSchema (schema, value, path) {
     const errors = []
     path = path || this.jsoneditor.root.formname
-    console.log('valid path', path)
 
     /* Work on a copy of the schema */
     schema = extend({}, this.jsoneditor.expandRefs(schema))
@@ -625,17 +614,10 @@ export class Validator {
       - validateSubmit 발생 시에만 required 체크
       - core.onChange 발생 시 root.getValue 대상이어서 required 체크때문에 모든 필드 에러 발생함
     */
-    //if (isSubmitValidate && Array.isArray(schema.required) && schema.required.length > 0) {
     if (Array.isArray(schema.required) && schema.required.length > 0) {
       const requiredErrors = this._requiredSchema(schema, value, path)
       errors.push(...requiredErrors)
     }
-
-    /* Version 3 `required` and `required_by_default` */
-    // value값이 없을 때 - required로 설정하고 값이 없을 때
-    // if (typeof value === 'undefined') {
-    //   return this._validateV3Required(schema, value, path)
-    // }
 
     Object.keys(schema).forEach(key => {
       if (this._validateSubSchema[key]) {
@@ -932,4 +914,3 @@ export class Validator {
     }
   }
 }
-/* eslint-disable */

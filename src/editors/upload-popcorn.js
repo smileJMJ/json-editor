@@ -505,5 +505,15 @@ export class UploadEditor extends AbstractEditor {
   isValidMimeType (mimeType, mimeTypesList) {
     return mimeTypesList.reduce((a, v) => a || new RegExp(v.replace(/\*/g, '.*'), 'gi').test(mimeType), false)
   }
+
+  showValidationErrors (errmsg) {
+    if (Array.isArray(errmsg) && errmsg.length > 0) {
+      errmsg.forEach(v => {
+        if (v.path === this.path) this.theme.addInputError(this.uploader, v.message, this.errmsgWrap)
+      })
+    } else {
+      this.theme.removeInputError(this.uploader, this.errmsgWrap)
+    }
+  }
 }
 /* eslint-disable */

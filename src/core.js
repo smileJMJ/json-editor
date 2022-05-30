@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { defaults } from './defaults.js'
 import { Validator } from './validator.js'
 import { SchemaLoader } from './schemaloader.js'
@@ -81,7 +80,6 @@ export class JSONEditor {
       required: true,
       container: this.root_container
     })
-    const isLoadValidate = this.options.loadValidate // 로드 시 밸리데이션 실행할지 여부
 
     this.root.preBuild()
     this.root.build()
@@ -90,8 +88,6 @@ export class JSONEditor {
     /* Starting data */
     if (hasOwnProperty(this.options, 'startval')) this.root.setValue(this.options.startval)
 
-    //this.validation_results = this.validator.validate(this.root.getValue()) // 해당 코드는 정상적인 밸리데이션 동작을 위해 초기 실행되어야 함
-    //isLoadValidate && this.root.showValidationErrors(this.validation_results)
     this.ready = true
     this.element.classList.remove('je-not-loaded')
     this.element.classList.add('je-ready')
@@ -99,8 +95,6 @@ export class JSONEditor {
     /* Fire ready event asynchronously */
     window.requestAnimationFrame(() => {
       if (!this.ready) return
-      //this.validation_results = this.validator.validate(this.root.getValue()) // 해당 코드는 정상적인 밸리데이션 동작을 위해 초기 실행되어야 함
-      //isLoadValidate && this.root.showValidationErrors(this.validation_results)
       this.trigger('ready')
       this.trigger('change')
     })
@@ -239,7 +233,7 @@ export class JSONEditor {
     return new editorClass(options, JSONEditor.defaults, depthCounter)
   }
 
-  onChange (value, path) {
+  onChange (path) {
     if (!this.ready) return
 
     if (this.firing_change) return
@@ -250,25 +244,15 @@ export class JSONEditor {
       if (!this.ready) return
 
       /* Validate and cache results */
-      //this.validation_results = this.validator.validate(this.root.getValue())
+      this.validation_results = this.validator.validate(this.root.getValue())
+      const targetError = path ? this.validation_results.filter(v => v.path === path) : []
+      console.log(targetError)
 
-      // if (this.options.show_errors !== 'never') {
-      //   this.root.showValidationErrors(this.validation_results)
-      // } else {
-      //   this.root.showValidationErrors([])
-      // }
-
-      // if (value) {
-      //   //this.validation_results = this.validator.validate(value)
-      //   this.validation_results = this.validator.validate(value, false)
-      //   console.log('error', this.validation_results)
-
-      //   if (this.options.show_errors !== 'never') {
-      //     this.root.showValidationErrors(this.validation_results)
-      //   } else {
-      //     this.root.showValidationErrors([])
-      //   }
-      // }
+      if (this.options.show_errors !== 'never') {
+        this.root.showValidationErrors(targetError)
+      } else {
+        this.root.showValidationErrors([])
+      }
 
       /* Fire change event */
       this.trigger('change')
@@ -452,4 +436,3 @@ Object.assign(JSONEditor.defaults.themes, themes)
 Object.assign(JSONEditor.defaults.editors, editors)
 Object.assign(JSONEditor.defaults.templates, templates)
 Object.assign(JSONEditor.defaults.iconlibs, iconlibs)
-/* eslint-disable */

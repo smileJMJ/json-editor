@@ -17,7 +17,7 @@ export class UploadEditor extends AbstractEditor {
     this.value = this.valueType === 'array' ? [] : null // img url 담을 array
     this.country = this.options.country || 'ko'
     this.msg = uploadMsg[this.country]
-    this.innerContents = this.options.innerContents || `
+    this.inner_contents = this.options.inner_contents || `
     <h3>첨부파일 관리</h3>
     <ul>
         <li>파일 포맷: 이미지 파일 (JPEG, PNG, BMP...)</li>
@@ -240,10 +240,10 @@ export class UploadEditor extends AbstractEditor {
 
   // innerContents 생성
   setInnerContents (target) {
-    if(!target || !this.innerContents) return
+    if(!target || !this.inner_contents) return
     const innerContents = document.createElement('div')
     innerContents.classList.add('inner-contents')
-    innerContents.innerHTML = this.innerContents
+    innerContents.innerHTML = this.inner_contents
     target.appendChild(innerContents)
 
     return innerContents

@@ -21960,7 +21960,7 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
 
       this.country = this.options.country || 'ko';
       this.msg = _popcorn_msg_upload__WEBPACK_IMPORTED_MODULE_34__["default"][this.country];
-      this.innerContents = this.options.innerContents || "\n    <h3>\uCCA8\uBD80\uD30C\uC77C \uAD00\uB9AC</h3>\n    <ul>\n        <li>\uD30C\uC77C \uD3EC\uB9F7: \uC774\uBBF8\uC9C0 \uD30C\uC77C (JPEG, PNG, BMP...)</li>\n        <li>\uD30C\uC77C \uD06C\uAE30: 20MB \uC774\uD558 / \uCCA8\uBD80 \uD30C\uC77C \uAC2F\uC218: 1\uAC1C</li>\n    </ul>\n  "; // 내부 설명 콘텐츠
+      this.inner_contents = this.options.inner_contents || "\n    <h3>\uCCA8\uBD80\uD30C\uC77C \uAD00\uB9AC</h3>\n    <ul>\n        <li>\uD30C\uC77C \uD3EC\uB9F7: \uC774\uBBF8\uC9C0 \uD30C\uC77C (JPEG, PNG, BMP...)</li>\n        <li>\uD30C\uC77C \uD06C\uAE30: 20MB \uC774\uD558 / \uCCA8\uBD80 \uD30C\uC77C \uAC2F\uC218: 1\uAC1C</li>\n    </ul>\n  "; // 내부 설명 콘텐츠
 
       /* Editor options */
 
@@ -22218,10 +22218,10 @@ var UploadEditor = /*#__PURE__*/function (_AbstractEditor) {
   }, {
     key: "setInnerContents",
     value: function setInnerContents(target) {
-      if (!target || !this.innerContents) return;
+      if (!target || !this.inner_contents) return;
       var innerContents = document.createElement('div');
       innerContents.classList.add('inner-contents');
-      innerContents.innerHTML = this.innerContents;
+      innerContents.innerHTML = this.inner_contents;
       target.appendChild(innerContents);
       return innerContents;
     } // previewList 영역 생성

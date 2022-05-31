@@ -1,5 +1,6 @@
 import { AbstractTheme } from '../theme.js'
 import { LABEL_POSITION } from '../enums'
+import './popcorn-icon'
 
 export class popcornTheme extends AbstractTheme {
   /*
@@ -68,6 +69,7 @@ export class popcornTheme extends AbstractTheme {
   */
   addInputError (input, text, target) {
     const group = target || this.closest(input, '.form-control')
+    const errorIcon = `<svg class="w-4 h-4 inline-block mr-1.5 shrink-0"><use href="#popcorn-error"/></svg>`;
     if (!input.errmsg) {
       const description = group && group.querySelector('p')
       input.errmsg = document.createElement('div')
@@ -83,9 +85,9 @@ export class popcornTheme extends AbstractTheme {
 
     group.classList.add('error')
     if (Array.isArray(text) && text.length > 0) {
-      input.errmsg.innerHTML = `<p>${text[0]}</p>`
+      input.errmsg.innerHTML = `<p class="flex items-center">${errorIcon}${text[0]}</p>`
     } else {
-      input.errmsg.innerHTML = `<p>${text}</p>`
+      input.errmsg.innerHTML = `<p class="flex items-center">${errorIcon}${text}</p>`
     }
   }
 

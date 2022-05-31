@@ -1,6 +1,7 @@
 const webpack = require('webpack')
 const helpers = require('./helpers')
 const CssToJSON = require('../build/CssToJson')
+//const SpriteLoaderPlugin = require('svg-sprite-loader/plugin')
 
 const bannerText = `/**
 * @name JSON Editor
@@ -50,6 +51,10 @@ module.exports = {
         test: /\.css$/,
         exclude: /(node_modules)|(src\/themes)|(src\/editors)/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-sprite-loader'
       }
     ]
   },

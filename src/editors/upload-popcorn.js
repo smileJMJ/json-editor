@@ -288,7 +288,7 @@ export class UploadEditor extends AbstractEditor {
     info.innerHTML += `<strong>${file.name}</strong><span>${file.formattedSize}</span>`
     item.appendChild(info)
 
-    status.classList.add('status')
+    status.classList.add('status', 'flex', 'items-center', 'shrink-0')
     item.appendChild(status)
 
     return item
@@ -319,6 +319,7 @@ export class UploadEditor extends AbstractEditor {
           }
 
           //if (this.progressBar) this.preview.removeChild(this.progressBar)
+          item.querySelector('.status').insertAdjacentHTML('afterbegin', `<svg class="success w-5 h-5 mr-4"><use href="#popcorn-success" /></svg>`)
           uploadButton.removeAttribute('disabled')
         },
         failure: (error) => {
@@ -346,6 +347,8 @@ export class UploadEditor extends AbstractEditor {
   // preview remove button
   setPreviewRemoveButton (item, data) {
     const removeButton = document.createElement('button')
+    const removeIcon = `<svg class="w-full h-full"><use href="#popcorn-remove" /></svg>`;
+    removeButton.innerHTML = removeIcon;
     removeButton.classList.add('circle', 'json-editor-btn-remove')
 
     removeButton.addEventListener('click', e => {

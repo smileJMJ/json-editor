@@ -16,7 +16,8 @@ export class Validator {
       const errors = []
       if (Array.isArray(schema.required)) {
         schema.required.forEach(e => {
-          if (typeof value[e] !== 'boolean' && (!value[e] || (Array.isArray(value[e]) && !value[e].length))) {
+          const val = value[e]
+          if (typeof val !== 'boolean' && ((!val && val !== 0) || (Array.isArray(val) && !val.length))) {
             const editor = this.jsoneditor.getEditor(`${path}.${e}`)
             if (editor && editor.dependenciesFulfilled === false) return
             /* Ignore required error if editor is of type "button" or "info" */

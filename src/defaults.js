@@ -344,10 +344,10 @@ languages.en = {
 Object.entries(editors).forEach(([i, editor]) => { editors[i].options = editor.options || {} })
 
 /* Default upload handler */
-function upload (type, file, cbs) {
-  // eslint-disable-next-line no-console
-  console.log('Upload handler required for upload editor')
-}
+// function upload (type, file, cbs) {
+//   // eslint-disable-next-line no-console
+//   console.log('Upload handler required for upload editor')
+// }
 
 /* String translate function */
 function translate (key, variables, schema) {
@@ -380,11 +380,14 @@ function translateProperty (text, variables) {
 
 /* Default options when initializing JSON Editor */
 const options = {
-  upload,
   use_name_attributes: true,
   prompt_before_delete: true,
   use_default_values: true,
-  max_depth: 0
+  max_depth: 0,
+  no_additional_properties: true,
+  disable_properties: true,
+  disable_edit_json: true,
+  disable_collapse: true
 }
 
 /* This assignment was previously in index.js but makes more sense here */

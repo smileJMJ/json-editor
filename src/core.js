@@ -127,7 +127,6 @@ export class JSONEditor {
   // submit 진행 시 유효성검사 진행 후 에러메시지 노출
   validateSubmit () {
     const results = this.validator.validate(this.root.getValue(), true)
-    console.log(results)
     this.root.showValidationErrors(results)
 
     return results
@@ -246,7 +245,6 @@ export class JSONEditor {
       /* Validate and cache results */
       this.validation_results = this.validator.validate(this.root.getValue())
       const targetError = path ? this.validation_results.filter(v => v.path === path) : []
-      console.log(targetError)
 
       if (this.options.show_errors !== 'never') {
         this.root.showValidationErrors(targetError)

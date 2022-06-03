@@ -9,24 +9,12 @@ export class UploadEditor extends AbstractEditor {
   }
 
   build () {
-    if (!this.options.compact) this.header = this.label = this.theme.getFormInputLabel(this.getTitle(), this.isRequired())
-    if (this.schema.description) this.description = this.theme.getFormInputDescription(this.translateProperty(this.schema.description))
-    if (this.options.infoText) this.infoButton = this.theme.getInfoButton(this.translateProperty(this.options.infoText))
-
-    this.valueType = this.schema.type || 'string' // type: string / array
-    this.value = this.valueType === 'array' ? [] : null // img url 담을 array
-    this.country = this.options.country || 'ko'
-    this.msg = uploadMsg[this.country]
-    this.inner_contents = this.options.inner_contents || `
-    <h3>첨부파일 관리</h3>
-    <ul>
-        <li>파일 포맷: 이미지 파일 (JPEG, PNG, BMP...)</li>
-        <li>파일 크기: 20MB 이하 / 첨부 파일 갯수: 1개</li>
-    </ul>
-  ` // 내부 설명 콘텐츠
+    if (!this.jsoneditor.options.upload) {
+      console.log('1depth options에 upload 및 upload_handler를 추가해주세요.')
+    }
 
     /* Editor options */
-    this.options = this.expandCallbacks('upload', extend({}, {
+    const schemaInnerOptions = this.expandCallbacks('upload', extend({}, {
       title: 'Browse',
       icon: '',
       auto_upload: true, /* Trigger file upload button automatically */
@@ -44,7 +32,25 @@ export class UploadEditor extends AbstractEditor {
       }
     }, this.defaults.options.upload || {}, this.options.upload || {}))
 
+    this.options = extend({}, schemaInnerOptions, this.jsoneditor.options.upload || {}) // 우선순위: 1depth options의 upload > schema 내부에서 정의하는 options
+
     this.options.mime_type = this.options.mime_type ? [].concat(this.options.mime_type) : []
+
+    if (!this.options.compact) this.header = this.label = this.theme.getFormInputLabel(this.getTitle(), this.isRequired())
+    if (this.schema.description) this.description = this.theme.getFormInputDescription(this.translateProperty(this.schema.description))
+    if (this.options.infoText) this.infoButton = this.theme.getInfoButton(this.translateProperty(this.options.infoText))
+    
+    this.valueType = this.schema.type || 'string' // type: string / array
+    this.value = this.valueType === 'array' ? [] : null // img url 담을 array
+    this.country = this.options.country || 'ko'
+    this.msg = uploadMsg[this.country]
+    this.inner_contents = this.options.inner_contents || `
+    <h3>첨부파일 관리</h3>
+    <ul>
+        <li>파일 포맷: 이미지 파일 (JPEG, PNG, BMP...)</li>
+        <li>파일 크기: 20MB 이하 / 첨부 파일 갯수: 1개</li>
+    </ul>
+  ` // 내부 설명 콘텐츠
 
     // drop mode 여부 - enable_drag_drop: true인지 여부
     this.isDropMode = this.options.enable_drag_drop || false
@@ -215,7 +221,6 @@ export class UploadEditor extends AbstractEditor {
     const inputWrap = document.createElement('div')
     const errmsgWrap = document.createElement('div')
     const innerContents = this.setInnerContents(gridWrap) // innserContents 생성
-    const inputNode = this.uploader
     const dropZoneText = document.createElement('div')
 
     gridWrap.classList.add('grid', 'grid-cols-12')
@@ -273,19 +278,19 @@ export class UploadEditor extends AbstractEditor {
 
     inputHidden.type = 'hidden'
     if (isInitialData) {
-      inputHidden.value = file.downloadUrl
+      inputHidden.value = file
     }
     item.appendChild(inputHidden)
 
-    if (isDropMode && file.mimeType.substr(0, 5) === 'image') {
+    if (isDropMode && (isInitialData || (!isInitialData && file.mimeType.substr(0, 5) === 'image'))) {
       const figure = document.createElement('figure')
       const img = document.createElement('img')
-      img.src = data || file.downloadUrl
+      img.src = isInitialData ? file : (data || file.downloadUrl)
       figure.appendChild(img)
       info.appendChild(figure)
     }
     info.classList.add('info')
-    info.innerHTML += `<strong>${file.name}</strong><span>${file.formattedSize}</span>`
+    info.innerHTML += isInitialData ? `<strong>${file}</strong>` : `<strong>${file.name}</strong><span>${file.formattedSize}</span>`
     item.appendChild(info)
 
     status.classList.add('status', 'flex', 'items-center', 'shrink-0')
@@ -296,7 +301,6 @@ export class UploadEditor extends AbstractEditor {
 
   // preview upload button
   setPreviewUploadButton (item, file) {
-    //const uploadButton = this.getButton('button_upload', 'upload', 'button_upload')
     const uploadButton = this.getButton(this.msg.upload_btn_upload, 'upload', this.msg.upload_btn_upload)
     uploadButton.addEventListener('click', (event) => {
       event.preventDefault()
@@ -369,11 +373,11 @@ export class UploadEditor extends AbstractEditor {
     if (Array.isArray(this.value) && this.value.length > 0) {
       onlyUrlData = this.value.map(v => {
         v && this.refreshPreview(v, true)
-        return v.downloadUrl || null
+        return v || null
       })
     } else {
       this.refreshPreview(this.value, true)
-      onlyUrlData = this.value.downloadUrl || null
+      onlyUrlData = this.value || null
     }
 
     this.setValue(onlyUrlData)
@@ -396,6 +400,12 @@ export class UploadEditor extends AbstractEditor {
       /* mime type extracted from file data. More exact than the one in the file object */
       const mime = this.preview_value.match(/^data:([^;,]+)[;,]/)
       file.mimeType = mime ? mime[1] : 'unknown'
+
+      if (file.size > 0) {
+        /* Format bytes as KB/MB etc. with 2 decimals */
+        const i = Math.floor(Math.log(file.size) / Math.log(1024))
+        file.formattedSize = `${parseFloat((file.size / (1024 ** i)).toFixed(2))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][i]}`
+      } else file.formattedSize = '0 Bytes'
     }
 
     item = this.previewList.querySelector('li')
@@ -407,12 +417,6 @@ export class UploadEditor extends AbstractEditor {
       item = this.previewList.querySelector('li')
       item.innerHTML = ''
     }
-
-    if (file.size > 0) {
-      /* Format bytes as KB/MB etc. with 2 decimals */
-      const i = Math.floor(Math.log(file.size) / Math.log(1024))
-      file.formattedSize = `${parseFloat((file.size / (1024 ** i)).toFixed(2))} ${['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][i]}`
-    } else file.formattedSize = '0 Bytes'
     
     this.setPreviewListItem (item, file, this.preview_value, this.isDropMode, isInitialData)
     !isInitialData && this.setPreviewUploadButton(item, file) // upload button 및 이벤트 생성. 초기 데이터 주입 시엔 실행 X

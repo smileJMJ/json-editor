@@ -101,7 +101,7 @@ export class ObjectEditor extends AbstractEditor {
         if (editor.property_removed) {
           return
         }
-        const width = editor.options.hidden ? 0 : (isPopcornTheme ? (editor.options.grid_columns || 0) : editor.getNumColumns())
+        const width = editor.options.hidden ? 0 : (isPopcornTheme ? (editor.options.grid_columns || 12) : editor.getNumColumns())
         const offset = editor.options.hidden ? 0 : (editor.options.grid_offset || 0)
         const gridBreak = editor.options.hidden ? false : (editor.options.grid_break || false)
         const height = editor.options.hidden ? 0 : editor.container.offsetHeight
@@ -1225,8 +1225,6 @@ export class ObjectEditor extends AbstractEditor {
       } else if (!initial && !this.isRequiredObject(editor)) {
         if (this.jsoneditor.options.show_opt_in || this.options.show_opt_in) {
           editor.deactivate()
-        } else {
-          this.removeObjectProperty(i)
         }
         /* Otherwise, set the value to the default */
       } else {

@@ -39,6 +39,7 @@ export class JSONEditor {
     this.theme = new themeClass(this)
     this.theme.themeName = themeName
     const rules = extend(styleRules, this.getEditorsRules())
+    this.showErrorMsg = [] // 현재 노출중인 에러 메시지
 
     /* Call addNewStyleRulesToShadowRoot if shadowRoot is found, otherwise call addNewStyleRules */
     const addRules = (themeName, rules, shadowRoot) => shadowRoot
@@ -117,19 +118,20 @@ export class JSONEditor {
     if (!this.ready) throw new Error('JSON Editor not ready yet. Make sure the load method is complete')
     /* Custom value */
     if (arguments.length === 1) {
-      return this.validator.validate(value)
+      this.validation_results = this.validator.validate(value)
       /* Current value (use cached result) */
-    } else {
-      return this.validation_results
     }
+
+    return this.validation_results
   }
 
   // submit 진행 시 유효성검사 진행 후 에러메시지 노출
   validateSubmit () {
-    const results = this.validator.validate(this.root.getValue(), true)
-    this.root.showValidationErrors(results)
+    this.validation_results = this.validator.validate(this.root.getValue(), true)
+    this.showErrorMsg = this.validation_results
+    this.root.showValidationErrors(this.validation_results)
 
-    return results
+    return this.validation_results
   }
 
   destroy () {
@@ -243,10 +245,20 @@ export class JSONEditor {
       if (!this.ready) return
 
       /* Validate and cache results */
-      this.validation_results = this.validator.validate(this.root.getValue())
-      const targetError = path ? this.validation_results.filter(v => v.path === path) : []
-
       if (this.options.show_errors !== 'never') {
+        this.validation_results = this.validator.validate(this.root.getValue())
+        const targetError = path ? this.validation_results.filter(v => v.path === path) : []
+        const curResultPath = this.validation_results.map(v => v.path)
+        if (this.showErrorMsg.length > 0) {
+          this.showErrorMsg.forEach(v => {
+            if (curResultPath.includes(v.path)) {
+              targetError.push(v)
+            }
+          })
+        }
+
+        this.showErrorMsg = targetError
+
         this.root.showValidationErrors(targetError)
       } else {
         this.root.showValidationErrors([])

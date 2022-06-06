@@ -596,10 +596,10 @@ export class Validator {
     @param {Boolean} isSubmitValidate validateSubmit()에서 실행했는지 여부
   */
   validate (value, isSubmitValidate) {
-    if (!this.jsoneditor.options.loadValidate && this.isInitialValidate) { // 로드 시 밸리데이션 실행할지 여부
-      this.isInitialValidate = false
-      return []
-    }
+    // if (!this.jsoneditor.options.loadValidate && this.isInitialValidate) { // 로드 시 밸리데이션 실행할지 여부
+    //   this.isInitialValidate = false
+    //   return []
+    // }
     return this._validateSchema(this.schema, value, null, isSubmitValidate)
   }
 
